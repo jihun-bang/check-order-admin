@@ -4,13 +4,64 @@ publish_to: 'none'
 version: 1.0.0+1
 environment:
   sdk: '>=3.2.3 <4.0.0'
+
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  cupertino_icons: any
+  flutter_riverpod: any
+  riverpod_annotation: any
+  json_annotation: any
+  go_router: any
+  flutter_svg: any
+  shared_preferences: any
+  freezed_annotation: any
+  injectable: any
+  fluttertoast: any
+  dio: any
+  dartz: any
+  get_it: any
+  intl: any
+  logger: any
+  hooks_riverpod: ^2.4.9
+  collection: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: any
+  build_runner: any
+  json_serializable: any
+  go_router_builder: any
+  freezed: any
+  riverpod_lint: any
+  riverpod_generator: any
+  injectable_generator: any
+  custom_lint: any
+
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/images/
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard/Pretendard-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Pretendard/Pretendard-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Pretendard/Pretendard-Light.otf
+          weight: 300
+        - asset: assets/fonts/Pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard/Pretendard-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Pretendard/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Pretendard/Pretendard-Black.otf
+          weight: 900
