@@ -82,6 +82,7 @@ class SignInPage extends StatelessWidget {
     return Consumer(builder: (context, ref, _) {
       return AppTextField(
         label: '비밀번호',
+        obscureText: true,
         onChanged: (value) {
           ref.read(signInRequestProvider.notifier).updatePassword(value);
         },

@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "prod": "check-order-prod"
+  },
+  "targets": {
+    "check-order-prod": {
+      "hosting": {
+        "admin": [
+          "check-order-admin-prod"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
