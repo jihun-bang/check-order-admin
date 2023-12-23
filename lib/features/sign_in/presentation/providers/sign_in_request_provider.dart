@@ -1,6 +1,8 @@
+import 'package:check_order_admin/core/data/remote/models/user/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/data/remote/models/user/sign_in_request_model.dart';
+import '../../../../services/auth_provider.dart';
 
 part 'sign_in_request_provider.g.dart';
 
@@ -21,5 +23,9 @@ class SignInRequest extends _$SignInRequest {
 
   bool get isValid {
     return state.email.isNotEmpty && state.password.isNotEmpty;
+  }
+
+  Future<UserModel> signIn() {
+    return ref.read(authProvider.notifier).signIn(state);
   }
 }

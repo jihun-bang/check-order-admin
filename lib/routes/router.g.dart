@@ -1,12 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint
+
 part of 'router.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerHash() => r'f879e59d3f2b3f0fad14d27bdf0ca5a47b9e2c1d';
+String _$routerHash() => r'bdfb559ac53b63884d927aced746b4a5a3a5c7ec';
 
 /// See also [router].
 @ProviderFor(router)

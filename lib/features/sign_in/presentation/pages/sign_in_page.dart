@@ -1,9 +1,8 @@
-import 'package:check_order_admin/core/data/remote/models/user/sign_in_request_model.dart';
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
+import 'package:check_order_admin/features/sign_in/presentation/providers/sign_in_request_provider.dart';
 import 'package:check_order_admin/routes/routes.dart';
-import 'package:check_order_admin/services/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -69,33 +68,41 @@ class SignInPage extends StatelessWidget {
   }
 
   Widget get _buildEmail {
-    return const AppTextField(
-      label: '이메일',
-    );
+    return Consumer(builder: (context, ref, _) {
+      return AppTextField(
+        label: '이메일',
+        onChanged: (value) {
+          ref.read(signInRequestProvider.notifier).updateEmail(value);
+        },
+      );
+    });
   }
 
   Widget get _buildPassword {
-    return const AppTextField(
-      label: '비밀번호',
-    );
+    return Consumer(builder: (context, ref, _) {
+      return AppTextField(
+        label: '비밀번호',
+        onChanged: (value) {
+          ref.read(signInRequestProvider.notifier).updatePassword(value);
+        },
+      );
+    });
   }
 
   Widget get _buildSignIn {
     return Consumer(builder: (context, ref, _) {
+      final state = ref.watch(signInRequestProvider);
       return AppButton(
         label: '로그인',
         width: 448,
+        enable: state.email.isNotEmpty && state.password.isNotEmpty,
         onTap: () async {
-          ref
-              .read(authProvider.notifier)
-              .signIn(
-                const SignInRequestModel(email: 'email', password: 'password'),
-              )
-              .then((value) async {
+          ref.read(signInRequestProvider.notifier).signIn().then((value) async {
             await Future.delayed(const Duration(milliseconds: 200));
             if (context.mounted) {
               switch (value.isAuth) {
                 case true:
+                  showMessageToast(context: context, message: '로그인 되었습니다.');
                   const OrderStatusManagementRoute().go(context);
                 case false:
                   showMessageToast(

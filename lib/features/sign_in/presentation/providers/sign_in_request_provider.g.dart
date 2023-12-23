@@ -1,12 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint
+
 part of 'sign_in_request_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$signInRequestHash() => r'ed614a1665b279eaaae194ac9568ef7138bddb54';
+String _$signInRequestHash() => r'0ca38986ad23bbfbe3080800bbbece133908ba3f';
 
 /// See also [SignInRequest].
 @ProviderFor(SignInRequest)

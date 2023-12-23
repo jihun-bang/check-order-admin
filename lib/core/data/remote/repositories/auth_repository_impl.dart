@@ -1,5 +1,4 @@
 import 'package:check_order_admin/core/data/exception/exception.dart';
-import 'package:check_order_admin/core/data/local/datasource/auth_storage.dart';
 import 'package:check_order_admin/core/data/remote/models/user/sign_in_request_model.dart';
 import 'package:check_order_admin/core/data/remote/models/user/user_model.dart';
 import 'package:dartz/dartz.dart';
@@ -11,9 +10,8 @@ import '../../../domain/repositories/auth_repository.dart';
 @Injectable(as: AuthRepository)
 class AuthRepositoryImpl extends AuthRepository {
   final AuthDataSource _authDataSource;
-  final AuthStorage _storage;
 
-  AuthRepositoryImpl(this._authDataSource, this._storage);
+  AuthRepositoryImpl(this._authDataSource);
 
   @override
   Future<Either<ServerFailure, UserModel>> fetchUser(
@@ -22,8 +20,8 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<ServerFailure, UserModel>> fetchUserWithEmail() {
-    return _authDataSource.fetchUser(
-        model: const SignInRequestModel(email: 'email', password: 'password'));
+  Future<Either<ServerFailure, UserModel>> fetchUserWithEmail(
+      {required String email}) {
+    return _authDataSource.fetchUserWithEmail(email: email);
   }
 }

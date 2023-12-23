@@ -8,5 +8,6 @@ abstract class AuthRepository {
   Future<Either<ServerFailure, UserModel>> fetchUser(
       {required SignInRequestModel model});
 
-  Future<Either<ServerFailure, UserModel>> fetchUserWithEmail();
+  Future<Either<ServerFailure, UserModel>> fetchUserWithEmail(
+      {required String email});
 }

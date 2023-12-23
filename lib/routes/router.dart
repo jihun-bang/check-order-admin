@@ -37,14 +37,16 @@ GoRouter router(RouterRef ref) {
             '인증 중...[isLoading=${isAuth.value.isLoading}, hasError=${isAuth.value.unwrapPrevious().hasError} hasValue=${isAuth.value.hasValue}]');
         return RoutePath.landing;
       }
+
       if (state.matchedLocation == RoutePath.landing ||
           state.matchedLocation == RoutePath.signIn) {
+        Logger.e('인증 중...[isAuth=${isAuth.value.value}]');
         return (isAuth.value.value ?? false)
-            ? null
-            : RoutePath.orderStatusManagement;
+            ? RoutePath.orderStatusManagement
+            : null;
       }
-      if (state.uri.path.contains('sign-in')) {
-        return (isAuth.value.value ?? false) ? null : RoutePath.signIn;
+      if ((isAuth.value.value ?? false) == false) {
+        return RoutePath.landing;
       }
       return null;
     },

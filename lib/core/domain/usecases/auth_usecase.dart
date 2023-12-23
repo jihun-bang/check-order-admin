@@ -15,7 +15,7 @@ class AuthUseCase {
   Future<UserModel> signInRecoveryAttempt() async {
     final savedEmail = _storage.userEmail;
     if (savedEmail != null) {
-      return _signInWithEmail();
+      return _signInWithEmail(savedEmail);
     } else {
       _storage.reset().ignore();
       return const UserModel.signedOut();
@@ -42,8 +42,8 @@ class AuthUseCase {
         );
   }
 
-  Future<UserModel> _signInWithEmail() async {
-    final user = await _repository.fetchUserWithEmail().then(
+  Future<UserModel> _signInWithEmail(String savedEmail) async {
+    final user = await _repository.fetchUserWithEmail(email: savedEmail).then(
           (value) => value.fold(
             (l) {
               _storage.reset().ignore();

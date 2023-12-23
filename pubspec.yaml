@@ -11,7 +11,7 @@ dependencies:
   cupertino_icons: any
   flutter_riverpod: any
   riverpod_annotation: any
-  json_annotation: any
+  json_annotation: 4.8.1
   go_router: any
   flutter_svg: any
   shared_preferences: any
@@ -25,6 +25,10 @@ dependencies:
   logger: any
   hooks_riverpod: ^2.4.9
   collection: any
+  firebase_core: ^2.24.2
+  cloud_firestore_odm: ^1.0.0-dev.81
+  cloud_firestore: ^4.13.6
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +42,7 @@ dev_dependencies:
   riverpod_generator: any
   injectable_generator: any
   custom_lint: any
+  cloud_firestore_odm_generator: ^1.0.0-dev.81
 
 flutter:
   uses-material-design: true
