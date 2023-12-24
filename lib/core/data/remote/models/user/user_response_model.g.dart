@@ -35,14 +35,15 @@ abstract class UserResponseModelCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$UserResponseModelFromJson(snapshot.data()!);
+    return _$UserResponseModelFromJson(
+        {'email': snapshot.id, ...?snapshot.data()});
   }
 
   static Map<String, Object?> toFirestore(
     UserResponseModel value,
     SetOptions? options,
   ) {
-    return _$UserResponseModelToJson(value);
+    return {..._$UserResponseModelToJson(value)}..remove('email');
   }
 
   @override
@@ -137,8 +138,6 @@ abstract class UserResponseModelDocumentReference
   ///
   /// If no document exists yet, the update will fail.
   Future<void> update({
-    String email,
-    FieldValue emailFieldValue,
     String storeName,
     FieldValue storeNameFieldValue,
     String password,
@@ -150,8 +149,6 @@ abstract class UserResponseModelDocumentReference
   /// The update will fail if applied to a document that does not exist.
   void transactionUpdate(
     Transaction transaction, {
-    String email,
-    FieldValue emailFieldValue,
     String storeName,
     FieldValue storeNameFieldValue,
     String password,
@@ -189,17 +186,11 @@ class _$UserResponseModelDocumentReference extends FirestoreDocumentReference<
   }
 
   Future<void> update({
-    Object? email = _sentinel,
-    FieldValue? emailFieldValue,
     Object? storeName = _sentinel,
     FieldValue? storeNameFieldValue,
     Object? password = _sentinel,
     FieldValue? passwordFieldValue,
   }) async {
-    assert(
-      email == _sentinel || emailFieldValue == null,
-      "Cannot specify both email and emailFieldValue",
-    );
     assert(
       storeName == _sentinel || storeNameFieldValue == null,
       "Cannot specify both storeName and storeNameFieldValue",
@@ -209,11 +200,6 @@ class _$UserResponseModelDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both password and passwordFieldValue",
     );
     final json = {
-      if (email != _sentinel)
-        _$UserResponseModelFieldMap['email']!:
-            _$UserResponseModelPerFieldToJson.email(email as String),
-      if (emailFieldValue != null)
-        _$UserResponseModelFieldMap['email']!: emailFieldValue,
       if (storeName != _sentinel)
         _$UserResponseModelFieldMap['storeName']!:
             _$UserResponseModelPerFieldToJson.storeName(storeName as String),
@@ -231,17 +217,11 @@ class _$UserResponseModelDocumentReference extends FirestoreDocumentReference<
 
   void transactionUpdate(
     Transaction transaction, {
-    Object? email = _sentinel,
-    FieldValue? emailFieldValue,
     Object? storeName = _sentinel,
     FieldValue? storeNameFieldValue,
     Object? password = _sentinel,
     FieldValue? passwordFieldValue,
   }) {
-    assert(
-      email == _sentinel || emailFieldValue == null,
-      "Cannot specify both email and emailFieldValue",
-    );
     assert(
       storeName == _sentinel || storeNameFieldValue == null,
       "Cannot specify both storeName and storeNameFieldValue",
@@ -251,11 +231,6 @@ class _$UserResponseModelDocumentReference extends FirestoreDocumentReference<
       "Cannot specify both password and passwordFieldValue",
     );
     final json = {
-      if (email != _sentinel)
-        _$UserResponseModelFieldMap['email']!:
-            _$UserResponseModelPerFieldToJson.email(email as String),
-      if (emailFieldValue != null)
-        _$UserResponseModelFieldMap['email']!: emailFieldValue,
       if (storeName != _sentinel)
         _$UserResponseModelFieldMap['storeName']!:
             _$UserResponseModelPerFieldToJson.storeName(storeName as String),
@@ -368,17 +343,6 @@ abstract class UserResponseModelQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
-  UserResponseModelQuery whereEmail({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
   UserResponseModelQuery whereStoreName({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -403,18 +367,6 @@ abstract class UserResponseModelQuery
   });
 
   UserResponseModelQuery orderByDocumentId({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    UserResponseModelDocumentSnapshot? startAtDocument,
-    UserResponseModelDocumentSnapshot? endAtDocument,
-    UserResponseModelDocumentSnapshot? endBeforeDocument,
-    UserResponseModelDocumentSnapshot? startAfterDocument,
-  });
-
-  UserResponseModelQuery orderByEmail({
     bool descending = false,
     String startAt,
     String startAfter,
@@ -632,51 +584,6 @@ class _$UserResponseModelQuery
     );
   }
 
-  UserResponseModelQuery whereEmail({
-    Object? isEqualTo = notSetQueryParam,
-    Object? isNotEqualTo = notSetQueryParam,
-    Object? isLessThan = null,
-    Object? isLessThanOrEqualTo = null,
-    Object? isGreaterThan = null,
-    Object? isGreaterThanOrEqualTo = null,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$UserResponseModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$UserResponseModelFieldMap['email']!,
-        isEqualTo: isEqualTo != notSetQueryParam
-            ? _$UserResponseModelPerFieldToJson.email(isEqualTo as String)
-            : notSetQueryParam,
-        isNotEqualTo: isNotEqualTo != notSetQueryParam
-            ? _$UserResponseModelPerFieldToJson.email(isNotEqualTo as String)
-            : notSetQueryParam,
-        isLessThan: isLessThan != null
-            ? _$UserResponseModelPerFieldToJson.email(isLessThan as String)
-            : null,
-        isLessThanOrEqualTo: isLessThanOrEqualTo != null
-            ? _$UserResponseModelPerFieldToJson
-                .email(isLessThanOrEqualTo as String)
-            : null,
-        isGreaterThan: isGreaterThan != null
-            ? _$UserResponseModelPerFieldToJson.email(isGreaterThan as String)
-            : null,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
-            ? _$UserResponseModelPerFieldToJson
-                .email(isGreaterThanOrEqualTo as String)
-            : null,
-        isNull: isNull,
-        whereIn:
-            whereIn?.map((e) => _$UserResponseModelPerFieldToJson.email(e)),
-        whereNotIn:
-            whereNotIn?.map((e) => _$UserResponseModelPerFieldToJson.email(e)),
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
   UserResponseModelQuery whereStoreName({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
@@ -783,78 +690,6 @@ class _$UserResponseModelQuery
   }) {
     final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
         descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$UserResponseModelQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  UserResponseModelQuery orderByEmail({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    UserResponseModelDocumentSnapshot? startAtDocument,
-    UserResponseModelDocumentSnapshot? endAtDocument,
-    UserResponseModelDocumentSnapshot? endBeforeDocument,
-    UserResponseModelDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$UserResponseModelFieldMap['email']!, descending: descending);
     var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {

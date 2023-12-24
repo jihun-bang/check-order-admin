@@ -29,6 +29,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: widget.navigationShell,
       bottomNavigationBar: _buildBottomNavigationBar,
     );
   }
@@ -39,7 +40,6 @@ class _MainPageState extends State<MainPage> {
       child: SafeArea(
         child: Container(
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
           height: 44,
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

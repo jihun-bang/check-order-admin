@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/home/presentation/pages/main_page.dart';
+import '../features/order_status_management/presentation/pages/order_status_management_page.dart';
 import 'route_path.dart';
 
 part 'routes.g.dart';
@@ -88,10 +89,7 @@ class OrderStatusManagementRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const NoTransitionPage(
-          child: Scaffold(
-        body: Center(child: Text('주문 현황 관리')),
-      ));
+      const NoTransitionPage(child: OrderStatusManagementPage());
 }
 
 class TableManagementShellBranch extends StatefulShellBranchData {

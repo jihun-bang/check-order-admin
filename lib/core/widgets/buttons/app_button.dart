@@ -51,11 +51,12 @@ class _AppButtonState extends State<AppButton> {
     return ElevatedButton(
       onPressed: widget.enable ? () async => await _handlePress() : null,
       style: ElevatedButton.styleFrom(
-        elevation: 0,
-        fixedSize: Size(widget.width, widget.height),
-        disabledBackgroundColor: AppColors.gray10,
-        backgroundColor: widget.buttonColor,
-      ),
+          elevation: 0,
+          fixedSize: Size(widget.width, widget.height),
+          disabledBackgroundColor: AppColors.gray10,
+          backgroundColor: widget.buttonColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
       child: Center(
         child: _isLoading
             ? const SizedBox(
