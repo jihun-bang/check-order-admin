@@ -7,13 +7,11 @@ class AppDialog extends StatefulWidget {
   final String label;
   final String cancelLabel;
   final String confirmLabel;
-  final VoidCallback onCancel;
   final VoidCallback onConfirm;
 
   const AppDialog({
     super.key,
     required this.label,
-    required this.onCancel,
     required this.onConfirm,
     this.cancelLabel = '돌아가기',
     this.confirmLabel = '나가기',
@@ -42,24 +40,12 @@ class _AppDialogState extends State<AppDialog> {
     }
   }
 
-  Future<void> _handleCancel() async {
-    if (_isLoading) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-    await Future.sync(widget.onCancel);
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    void closeDialog() {
+      Navigator.of(context, rootNavigator: true).pop(false);
+    }
+
     return Container(
       width: 600,
       height: 260,
@@ -90,7 +76,7 @@ class _AppDialogState extends State<AppDialog> {
             children: [
               AppButton(
                 label: widget.cancelLabel,
-                onTap: _handleCancel,
+                onTap: closeDialog,
                 buttonColor: AppColors.gray10,
                 labelColor: AppColors.gray60,
               ),
@@ -99,7 +85,10 @@ class _AppDialogState extends State<AppDialog> {
               ),
               AppButton(
                 label: widget.confirmLabel,
-                onTap: _handleConfirm,
+                onTap: () {
+                  _handleConfirm();
+                  closeDialog();
+                },
                 buttonColor: AppColors.orange50,
               )
             ],
