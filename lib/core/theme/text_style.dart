@@ -27,6 +27,12 @@ class AppTextStyle {
     height: 1.36,
   );
 
+  static const TextStyle body20sb136 = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    height: 1.36,
+  );
+
   static const TextStyle body16b136 = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
