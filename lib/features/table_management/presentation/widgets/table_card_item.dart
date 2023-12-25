@@ -9,6 +9,7 @@ class TableCardItem extends StatelessWidget {
   final String tableName;
   final String tableId;
   final List<MenuItemModel> menus;
+  final VoidCallback onTap;
 
   const TableCardItem({
     super.key,
@@ -16,63 +17,70 @@ class TableCardItem extends StatelessWidget {
     required this.tableName,
     required this.tableId,
     required this.menus,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 274,
-      height: 305,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.2),
-            blurRadius: 12,
-            spreadRadius: 0,
-            offset: Offset(0, 2),
-          )
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            height: 60,
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: AppColors.gray80,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 274,
+        height: 305,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.2),
+              blurRadius: 12,
+              spreadRadius: 0,
+              offset: Offset(0, 2),
+            )
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 60,
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                color: AppColors.gray80,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '입장 시간',
+                    style:
+                        AppTextStyle.body16m136.copyWith(color: Colors.white),
+                  ),
+                  Text(
+                    DateFormat('HH:mm').format(enteredAt),
+                    style:
+                        AppTextStyle.body16m136.copyWith(color: Colors.white),
+                  )
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '입장 시간',
-                  style: AppTextStyle.body16m136.copyWith(color: Colors.white),
-                ),
-                Text(
-                  DateFormat('HH:mm').format(enteredAt),
-                  style: AppTextStyle.body16m136.copyWith(color: Colors.white),
-                )
-              ],
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                child: _menuList,
+              ),
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-              child: _menuList,
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              alignment: Alignment.centerRight,
+              child: Text(
+                tableName,
+                style:
+                    AppTextStyle.body20sb136.copyWith(color: AppColors.gray60),
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-            alignment: Alignment.centerRight,
-            child: Text(
-              tableName,
-              style: AppTextStyle.body20sb136.copyWith(color: AppColors.gray60),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
