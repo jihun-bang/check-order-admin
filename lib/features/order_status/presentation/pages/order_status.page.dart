@@ -43,8 +43,8 @@ List<OrderModel> orders = [
     status: OrderStatus.accepted,
     orderType: '메뉴',
     menus: const [
-      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 2),
-      MenuModel(id: '1', name: '계란말이', totalPrice: 50000, count: 2),
+      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 3),
+      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 1),
     ],
     orderedAt: DateTime.now(),
   ),
@@ -55,8 +55,8 @@ List<OrderModel> orders = [
     status: OrderStatus.accepted,
     orderType: '메뉴',
     menus: const [
-      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 2),
-      MenuModel(id: '1', name: '계란말이', totalPrice: 50000, count: 2),
+      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 4),
+      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 2),
     ],
     orderedAt: DateTime.now(),
   ),
@@ -68,7 +68,7 @@ List<OrderModel> orders = [
     orderType: '메뉴',
     menus: const [
       MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 2),
-      MenuModel(id: '1', name: '계란말이', totalPrice: 50000, count: 2),
+      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 2),
     ],
     orderedAt: DateTime(2024, 01, 3),
   ),

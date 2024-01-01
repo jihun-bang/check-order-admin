@@ -1,4 +1,5 @@
 import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
@@ -6,18 +7,10 @@ import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
 
-class MenuItem {
-  final String title;
-  final int count;
-  final int price;
-
-  MenuItem({required this.title, required this.count, required this.price});
-}
-
 typedef IntCallback = void Function(int);
 
 class OrderStatusDialog extends StatefulWidget {
-  final List<MenuItem> initialOrderedMenuList;
+  final List<MenuModel> initialOrderedMenuList;
   final IntCallback onConfirm;
 
   const OrderStatusDialog({
@@ -31,7 +24,7 @@ class OrderStatusDialog extends StatefulWidget {
 }
 
 class _OrderStatusDialogState extends State<OrderStatusDialog> {
-  late List<MenuItem> orderedMenuList;
+  late List<MenuModel> orderedMenuList;
 
   @override
   void initState() {
@@ -39,31 +32,37 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     orderedMenuList = widget.initialOrderedMenuList;
   }
 
-  void _handleRemove(String title) {
+  void _handleRemove(String id) {
     setState(() {
-      orderedMenuList.removeWhere((menu) => menu.title == title);
+      orderedMenuList.removeWhere((menu) => menu.id == id);
     });
   }
 
-  void _handleIncCount(String title) {
+  void _handleIncCount(String id) {
     setState(() {
       orderedMenuList = orderedMenuList
-          .map((menu) => menu.title == title
-              ? MenuItem(
-                  title: menu.title, count: menu.count + 1, price: menu.price)
+          .map((menu) => menu.id == id
+              ? MenuModel(
+                  id: menu.id,
+                  name: menu.name,
+                  count: menu.count + 1,
+                  totalPrice: menu.totalPrice,
+                )
               : menu)
           .toList();
     });
   }
 
-  void _handleDecCount(String title) {
+  void _handleDecCount(String id) {
     setState(() {
       orderedMenuList = orderedMenuList
-          .map((menu) => menu.title == title
-              ? MenuItem(
-                  title: menu.title,
+          .map((menu) => menu.id == id
+              ? MenuModel(
+                  id: menu.id,
+                  name: menu.name,
                   count: max(menu.count - 1, 1),
-                  price: menu.price)
+                  totalPrice: menu.totalPrice,
+                )
               : menu)
           .toList();
     });
@@ -71,8 +70,8 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
 
   @override
   Widget build(BuildContext context) {
-    int totalPrice =
-        orderedMenuList.fold(0, (sum, menu) => sum + menu.count * menu.price);
+    int totalPrice = orderedMenuList.fold(
+        0, (sum, menu) => sum + menu.totalPrice * menu.count);
 
     void showSettlementDialog() {
       showDialog(
@@ -81,6 +80,7 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
           return Dialog(
             child: AppDialog(
               label: '정산을 완료하고 테이블을 정리하겠습니까?',
+              confirmLabel: '정산하기',
               onConfirm: () {
                 widget.onConfirm(totalPrice);
               },
@@ -134,12 +134,13 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     );
   }
 
-  Widget _menuList({required List<MenuItem> menuList}) {
+  Widget _menuList({required List<MenuModel> menuList}) {
     return Wrap(
       children: menuList
           .map((menu) => _menuItem(
-                title: menu.title,
-                price: menu.price,
+                id: menu.id,
+                name: menu.name,
+                price: menu.totalPrice,
                 count: menu.count,
               ))
           .toList(),
@@ -147,7 +148,10 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
   }
 
   Widget _menuItem(
-      {required String title, required int price, required int count}) {
+      {required String id,
+      required String name,
+      required int price,
+      required int count}) {
     String formattedPrice = NumberFormat('#,###').format(price);
     String formattedTotalPrice = NumberFormat('#,###').format(price * count);
 
@@ -171,10 +175,10 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: AppTextStyle.head28b136),
+              Text(name, style: AppTextStyle.head28b136),
               IconButton(
                 onPressed: () {
-                  _handleRemove(title);
+                  _handleRemove(id);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -202,13 +206,13 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        _handleDecCount(title);
+                        _handleDecCount(id);
                       },
                       icon: const Icon(Icons.remove)),
                   Text('$count개', style: AppTextStyle.body20sb136),
                   IconButton(
                       onPressed: () {
-                        _handleIncCount(title);
+                        _handleIncCount(id);
                       },
                       icon: const Icon(Icons.add)),
                 ],

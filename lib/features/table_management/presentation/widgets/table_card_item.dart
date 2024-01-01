@@ -1,20 +1,18 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:check_order_admin/features/order_status_management/domain/models/menu_item_model.dart';
 
 class TableCardItem extends StatelessWidget {
   final DateTime enteredAt;
-  final String tableName;
   final String tableId;
-  final List<MenuItemModel> menus;
+  final List<MenuModel> menus;
   final VoidCallback onTap;
 
   const TableCardItem({
     super.key,
     required this.enteredAt,
-    required this.tableName,
     required this.tableId,
     required this.menus,
     required this.onTap,
@@ -46,6 +44,10 @@ class TableCardItem extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               decoration: const BoxDecoration(
                 color: AppColors.gray80,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +76,7 @@ class TableCardItem extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               alignment: Alignment.centerRight,
               child: Text(
-                tableName,
+                tableId,
                 style:
                     AppTextStyle.body20sb136.copyWith(color: AppColors.gray60),
               ),
