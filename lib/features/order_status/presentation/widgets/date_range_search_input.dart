@@ -15,7 +15,10 @@ class SearchInput {
 
 class DateRangeSearchInput extends StatefulWidget {
   final void Function(SearchInput) onConfirm;
-  const DateRangeSearchInput({super.key, required this.onConfirm});
+  final void Function() onReset;
+
+  const DateRangeSearchInput(
+      {super.key, required this.onConfirm, required this.onReset});
 
   @override
   State<DateRangeSearchInput> createState() => _DateRangeSearchInputState();
@@ -28,7 +31,8 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    bool isValid = startDate.length == 10 && endDate.length == 10;
+    bool isValid = (startDate.length == 10 && endDate.length == 10) ||
+        tableName.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
@@ -113,6 +117,14 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
                   );
 
                   widget.onConfirm(value);
+                },
+              ),
+              AppButton(
+                width: 115,
+                buttonColor: AppColors.gray80,
+                label: '초기화',
+                onTap: () {
+                  widget.onReset();
                 },
               )
             ],
