@@ -103,10 +103,7 @@ class TableManagementRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const NoTransitionPage(
-          child: Scaffold(
-        body: Center(child: Text('테이블 현황')),
-      ));
+      const NoTransitionPage(child: TableManagementPage());
 }
 
 class OrderStatusShellBranch extends StatefulShellBranchData {
