@@ -1,51 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 
-class Order {
-  final String orderId;
-  final String orderTime;
-  final String settlementTime;
-  final String menu;
-  final int quantity;
-  final double price;
-  final String status;
+List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
+  List<Map<String, dynamic>> flattenedMenus = [];
 
-  Order({
-    required this.orderId,
-    required this.orderTime,
-    required this.settlementTime,
-    required this.menu,
-    required this.quantity,
-    required this.price,
-    required this.status,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'orderId': orderId,
-      'orderTime': orderTime,
-      'settlementTime': settlementTime,
-      'menu': menu,
-      'quantity': quantity,
-      'price': price,
-      'status': status,
-    };
+  for (var order in orders) {
+    for (var menu in order.menus) {
+      flattenedMenus.add({
+        'id': order.id,
+        'tableId': order.tableId,
+        'storeId': order.storeId,
+        'status': order.status,
+        'orderType': order.orderType,
+        'menuId': menu.id,
+        'name': menu.name,
+        'totalPrice': menu.totalPrice,
+        'count': menu.count,
+        'orderedAt': order.orderedAt,
+        'acceptedAt': order.acceptedAt,
+        'declinedAt': order.declinedAt,
+        'completedAt': order.completedAt,
+      });
+    }
   }
 
-  dynamic operator [](String key) {
-    final Map<String, dynamic> map = toMap();
-    return map[key];
-  }
+  return flattenedMenus;
 }
 
 List<String> columns = [
-  'orderId',
-  'orderTime',
-  'settlementTime',
-  'menu',
-  'quantity',
-  'price',
+  'tableId',
+  'orderedAt',
+  'completedAt',
+  'name',
+  'count',
+  'totalPrice',
   'status'
 ];
 
@@ -60,12 +50,14 @@ List<String> columnLabels = [
 ];
 
 class OrderStatusTable extends StatelessWidget {
-  final List<Order> orders;
+  final List<OrderModel> orders;
 
   const OrderStatusTable({super.key, required this.orders});
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> flattenOrders = flattenMenus(orders);
+
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
@@ -84,7 +76,7 @@ class OrderStatusTable extends StatelessWidget {
           columns: List<DataColumn>.generate(columnLabels.length,
               (int idx) => DataColumn(label: Text(columnLabels[idx]))),
           rows: List<DataRow>.generate(
-            orders.length,
+            flattenOrders.length,
             (int rowIndex) => DataRow(
               color: MaterialStateProperty.resolveWith((states) {
                 return rowIndex % 2 == 0 ? AppColors.gray30 : Colors.white;
@@ -92,7 +84,8 @@ class OrderStatusTable extends StatelessWidget {
               cells: List<DataCell>.generate(
                 columns.length,
                 (int columnIndex) => DataCell(
-                  Text('${orders[rowIndex][columns[columnIndex]]}'),
+                  Text(
+                      '${flattenOrders[rowIndex][columns[columnIndex]] ?? ''}'),
                 ),
               ),
             ),
