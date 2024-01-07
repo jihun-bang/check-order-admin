@@ -9,6 +9,7 @@ class AppTextField extends StatefulWidget {
   final String? hintText;
   final String? helperText;
   final String? errorText;
+  final double? fontSize;
   final bool obscureText;
   final bool enabled;
   final double width;
@@ -30,6 +31,7 @@ class AppTextField extends StatefulWidget {
     this.onChanged,
     this.maxLines = 1,
     this.inputFormatters,
+    this.fontSize = 14,
   });
 
   @override
@@ -51,7 +53,6 @@ class _AppTextFieldState extends State<AppTextField> {
               widget.label!,
               style: TextStyle(
                 color: widget.labelColor,
-                fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -74,8 +75,8 @@ class _AppTextFieldState extends State<AppTextField> {
                   enabled: widget.enabled,
                   obscureText: widget.obscureText && !_showPassword,
                   obscuringCharacter: '*',
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: widget.fontSize,
                     height: 1.43,
                   ),
                   maxLines: widget.maxLines,
@@ -83,9 +84,9 @@ class _AppTextFieldState extends State<AppTextField> {
                     filled: true,
                     fillColor: Colors.white,
                     hintText: widget.hintText,
-                    hintStyle: const TextStyle(
-                      color: Color(0xFF666687),
-                      fontSize: 14,
+                    hintStyle: TextStyle(
+                      color: const Color(0xFF666687),
+                      fontSize: widget.fontSize,
                       fontWeight: FontWeight.w400,
                       height: 1.43,
                     ),
