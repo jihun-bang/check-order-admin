@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 class AppColors {
   static const Color gray10 = Color(0xFFF1F1F1);
   static const Color gray30 = Color(0xFFBFBFBF);
+  static const Color gray40 = Color(0xFFA8A8A8);
   static const Color gray60 = Color(0xFF606060);
   static const Color gray80 = Color(0xFF2C2C2C);
 
