@@ -1,4 +1,5 @@
 import 'package:check_order_admin/features/home/presentation/pages/landing_page.dart';
+import 'package:check_order_admin/features/menu_management/presentation/pages/menu_management_page.dart';
 import 'package:check_order_admin/features/order_status/presentation/pages/order_status.page.dart';
 import 'package:check_order_admin/features/sign_in/presentation/pages/sign_in_page.dart';
 import 'package:check_order_admin/features/table_management/presentation/pages/table_management_page.dart';
@@ -127,10 +128,7 @@ class MenuManagementRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const NoTransitionPage(
-          child: Scaffold(
-        body: Center(child: Text('메뉴 관리')),
-      ));
+      const NoTransitionPage(child: MenuManagementPage());
 }
 
 class SettingShellBranch extends StatefulShellBranchData {
