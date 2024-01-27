@@ -1,5 +1,7 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
+import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
+import 'package:check_order_admin/features/menu_management/presentation/widgets/menu_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -38,12 +40,40 @@ var switchValue = SwitchValueModel(
 );
 
 class MenuItem extends StatelessWidget {
-  const MenuItem({
-    super.key,
-  });
+  const MenuItem({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void showMenuEditDialog() {
+      showGeneralDialog(
+          barrierDismissible: false,
+          context: context,
+          pageBuilder: (_, __, ___) {
+            return MenuEditDialog(
+              onConfirm: () {
+                print('[API] save menu settings');
+              },
+            );
+          });
+    }
+
+    void showDeleteMenuDialog() {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return Dialog(
+            child: AppDialog(
+              label: '메뉴를 삭제하시겠습니까?',
+              confirmLabel: '삭제하기',
+              onConfirm: () {
+                print('[API] delete menu');
+              },
+            ),
+          );
+        },
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Row(
@@ -74,7 +104,10 @@ class MenuItem extends StatelessWidget {
             padding: const EdgeInsets.only(top: 15),
             child: Column(
               children: [
-                _editButtons(),
+                _editButtons(
+                  onEdit: showMenuEditDialog,
+                  onDelete: showDeleteMenuDialog,
+                ),
                 const SizedBox(
                   height: 40,
                 ),
@@ -162,7 +195,7 @@ class MenuItem extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (v) {
-                  print('선택 $v');
+                  print('[API] set category to $v');
                 }),
           ),
         )
@@ -170,13 +203,16 @@ class MenuItem extends StatelessWidget {
     );
   }
 
-  Widget _editButtons() {
+  Widget _editButtons({
+    required void Function() onEdit,
+    required void Function() onDelete,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton.icon(
-          onPressed: () {},
+          onPressed: onEdit,
           icon: const Icon(
             Icons.edit_outlined,
             size: 24,
@@ -188,7 +224,7 @@ class MenuItem extends StatelessWidget {
           ),
         ),
         TextButton.icon(
-          onPressed: () {},
+          onPressed: onDelete,
           icon: const Icon(
             Icons.delete_outline_outlined,
             size: 24,
@@ -232,7 +268,7 @@ class MenuItem extends StatelessWidget {
                       inactiveTrackColor: AppColors.gray40,
                       value: switchData['value'] as bool,
                       onChanged: (value) {
-                        print('$value 로 상태 변경');
+                        print('[API] set ${switchData['label']} to $value');
                       })
                 ],
               ))
