@@ -35,7 +35,7 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
         tableName.isNotEmpty;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,

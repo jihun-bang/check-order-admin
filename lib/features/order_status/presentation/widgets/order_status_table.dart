@@ -79,7 +79,7 @@ class OrderStatusTable extends StatelessWidget {
             flattenOrders.length,
             (int rowIndex) => DataRow(
               color: MaterialStateProperty.resolveWith((states) {
-                return rowIndex % 2 == 0 ? AppColors.gray30 : Colors.white;
+                return rowIndex % 2 == 0 ? AppColors.gray10 : Colors.white;
               }),
               cells: List<DataCell>.generate(
                 columns.length,

@@ -90,13 +90,22 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
       );
     }
 
-    return Expanded(
-      child: Container(
-        width: 380,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(children: [
+    return Container(
+      width: 380,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.30),
+            offset: Offset(0, 0),
+            blurRadius: 40,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
           _title,
           Expanded(
             child: SingleChildScrollView(
@@ -105,7 +114,7 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
             ),
           ),
           _settleBtn(totalPrice: totalPrice, onTap: showSettlementDialog)
-        ]),
+        ],
       ),
     );
   }

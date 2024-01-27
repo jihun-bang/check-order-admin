@@ -10,10 +10,13 @@ class TableManagementPage extends StatelessWidget {
   Widget build(BuildContext context) {
     void showOrderStatusDialog(menuList) {
       showDialog(
+        barrierColor: Colors.transparent,
         context: context,
         builder: (_) {
           return Dialog(
-              alignment: Alignment.centerRight,
+              // bottom: _buildBottomNavigationBar height
+              insetPadding: const EdgeInsets.only(bottom: 44),
+              alignment: Alignment.topRight,
               child: OrderStatusDialog(
                 initialOrderedMenuList: menuList,
                 onConfirm: (totalPrice) {
@@ -26,22 +29,25 @@ class TableManagementPage extends StatelessWidget {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 20,
-          runSpacing: 20,
-          children: orders
-              .map(
-                (order) => TableCardItem(
-                  enteredAt: order.orderedAt,
-                  tableId: order.tableId,
-                  menus: order.menus,
-                  onTap: () {
-                    showOrderStatusDialog(order.menus);
-                  },
-                ),
-              )
-              .toList(),
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 20,
+            runSpacing: 20,
+            children: orders
+                .map(
+                  (order) => TableCardItem(
+                    enteredAt: order.orderedAt,
+                    tableId: order.tableId,
+                    menus: order.menus,
+                    onTap: () {
+                      showOrderStatusDialog(order.menus);
+                    },
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
