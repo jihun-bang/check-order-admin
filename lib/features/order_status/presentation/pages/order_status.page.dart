@@ -3,31 +3,28 @@ import 'package:check_order_admin/features/order_status/presentation/widgets/dat
 import 'package:check_order_admin/features/order_status/presentation/widgets/order_status_table.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
-import 'package:intl/intl.dart';
 
-List<OrderModel> filterOrders(
-  List<OrderModel> orders,
-  DateTime? startDate,
-  DateTime? endDate,
-  String tableName,
-) {
+DateTime removeTime(DateTime date) {
+  return DateTime(date.year, date.month, date.day);
+}
+
+List<OrderModel> filterOrders({
+  required List<OrderModel> orders,
+  required DateTime startDate,
+  required DateTime endDate,
+  String tableName = '',
+}) {
   List<OrderModel> filteredOrders = orders.where((order) {
-    final orderedAtDate = DateTime(
-      order.orderedAt.year,
-      order.orderedAt.month,
-      order.orderedAt.day,
-    );
+    final modifiedOrderedAtDate = removeTime(order.orderedAt);
+    final modifiedStartDate = removeTime(startDate);
+    final modifiedEndDate = removeTime(endDate);
 
     final containsTableName = order.tableId.contains(tableName);
 
-    if (startDate == null || endDate == null) {
-      return containsTableName;
-    }
-
-    final isDateInRange = (orderedAtDate.isAfter(startDate) ||
-            orderedAtDate.isAtSameMomentAs(startDate)) &&
-        (orderedAtDate.isBefore(endDate) ||
-            orderedAtDate.isAtSameMomentAs(endDate));
+    final isDateInRange = (modifiedOrderedAtDate.isAfter(modifiedStartDate) ||
+            modifiedOrderedAtDate.isAtSameMomentAs(modifiedStartDate)) &&
+        (modifiedOrderedAtDate.isBefore(modifiedEndDate) ||
+            modifiedOrderedAtDate.isAtSameMomentAs(modifiedEndDate));
 
     return isDateInRange && containsTableName;
   }).toList();
@@ -82,7 +79,17 @@ class OrderStatusPage extends StatefulWidget {
 }
 
 class _OrderStatusPageState extends State<OrderStatusPage> {
-  List<OrderModel> filteredOrders = orders;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+  String tableName = '';
+  late List<OrderModel> filteredOrders;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredOrders =
+        filterOrders(orders: orders, startDate: startDate, endDate: endDate);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,19 +97,34 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
       body: Column(
         children: [
           DateRangeSearchInput(
+            initialStartDate: startDate,
+            initialEndDate: endDate,
+            initialTableName: tableName,
             onConfirm: (v) {
-              DateTime? startDate =
-                  DateFormat('yyyy-MM-dd').tryParse(v.startDate);
-              DateTime? endDate = DateFormat('yyyy-MM-dd').tryParse(v.endDate);
-
               setState(() {
-                filteredOrders =
-                    filterOrders(orders, startDate, endDate, v.tableName ?? '');
+                startDate = DateTime.parse(v.startDate);
+                endDate = DateTime.parse(v.endDate);
+                tableName = v.tableName ?? '';
+
+                filteredOrders = filterOrders(
+                  orders: orders,
+                  startDate: startDate,
+                  endDate: endDate,
+                  tableName: tableName,
+                );
               });
             },
             onReset: () {
               setState(() {
-                filteredOrders = orders;
+                startDate = DateTime.now();
+                endDate = DateTime.now();
+                tableName = '';
+
+                filteredOrders = filterOrders(
+                  orders: orders,
+                  startDate: startDate,
+                  endDate: endDate,
+                );
               });
             },
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
+import 'package:intl/intl.dart';
 
 class SearchInput {
   final String startDate;
@@ -14,20 +15,45 @@ class SearchInput {
 }
 
 class DateRangeSearchInput extends StatefulWidget {
+  final DateTime initialStartDate;
+  final DateTime initialEndDate;
+  final String initialTableName;
   final void Function(SearchInput) onConfirm;
   final void Function() onReset;
 
-  const DateRangeSearchInput(
-      {super.key, required this.onConfirm, required this.onReset});
+  const DateRangeSearchInput({
+    super.key,
+    required this.initialStartDate,
+    required this.initialEndDate,
+    required this.initialTableName,
+    required this.onConfirm,
+    required this.onReset,
+  });
 
   @override
   State<DateRangeSearchInput> createState() => _DateRangeSearchInputState();
 }
 
 class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
-  String startDate = '';
-  String endDate = '';
-  String tableName = '';
+  late String startDate;
+  late String endDate;
+  late String tableName;
+
+  @override
+  void initState() {
+    super.initState();
+    startDate = DateFormat('yyyy-MM-dd').format(widget.initialStartDate);
+    endDate = DateFormat('yyyy-MM-dd').format(widget.initialEndDate);
+    tableName = widget.initialTableName;
+  }
+
+  @override
+  void didUpdateWidget(covariant DateRangeSearchInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    startDate = DateFormat('yyyy-MM-dd').format(widget.initialStartDate);
+    endDate = DateFormat('yyyy-MM-dd').format(widget.initialEndDate);
+    tableName = widget.initialTableName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +97,7 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
                       FilteringTextInputFormatter.digitsOnly,
                       DateTextFormatter()
                     ],
+                    initText: startDate,
                     hintText: 'YYYY-MM-DD',
                     onChanged: (v) {
                       setState(() {
@@ -86,6 +113,7 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
                       FilteringTextInputFormatter.digitsOnly,
                       DateTextFormatter()
                     ],
+                    initText: endDate,
                     hintText: 'YYYY-MM-DD',
                     onChanged: (v) {
                       setState(() {
@@ -97,6 +125,7 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
               ),
               CustomTextField(
                 width: 180,
+                initText: tableName,
                 hintText: '테이블 이름',
                 onChanged: (v) {
                   setState(() {
@@ -136,18 +165,20 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
 }
 
 class CustomTextField extends StatelessWidget {
-  final double? width;
+  final String? initText;
+  final String? hintText;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-  final String? hintText;
+  final double? width;
   final void Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
-    this.width,
+    this.initText,
+    this.hintText,
     this.keyboardType,
     this.inputFormatters,
-    this.hintText,
+    this.width,
     this.onChanged,
   });
 
@@ -156,6 +187,12 @@ class CustomTextField extends StatelessWidget {
     return SizedBox(
       width: width,
       child: TextField(
+        controller: initText != null
+            ? (TextEditingController()
+              ..text = initText!
+              ..selection =
+                  TextSelection.collapsed(offset: initText?.length ?? 0))
+            : null,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         onChanged: onChanged,
