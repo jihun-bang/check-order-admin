@@ -16,7 +16,7 @@ class MainPage extends StatefulWidget {
   static const nav = [
     '주문 현황 관리',
     '테이블 현황',
-    '주문 현황',
+    '주문 기록',
     '메뉴 관리',
     '더보기',
   ];

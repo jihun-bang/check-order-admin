@@ -29,7 +29,13 @@ class OrderItem extends StatelessWidget {
   }
 
   Widget get _buildLeft {
-    final diffDate = DateTime.now().difference(order.orderedAt);
+    final updateDate = switch (order.status) {
+      OrderStatus.wait => order.orderedAt,
+      OrderStatus.declined => order.declinedAt,
+      OrderStatus.accepted => order.acceptedAt,
+      OrderStatus.completed => order.completedAt,
+    };
+    final diffDate = DateTime.now().difference(updateDate ?? order.orderedAt);
     final String date = '${diffDate.inMinutes}분 전';
 
     return Column(
@@ -83,20 +89,33 @@ class OrderItem extends StatelessWidget {
   }
 
   Widget get _buildRight {
+    final isAccepted = order.status == OrderStatus.accepted;
     return Column(
       children: [
         AppButton(
-          label: '주문 수락',
-          onTap: () {},
+          label: isAccepted ? '주문 완료' : '주문 수락',
+          onTap: () {
+            if (isAccepted) {
+              ordersRef.doc(order.id).update(
+                  status: OrderStatus.completed, completedAt: DateTime.now());
+            } else {
+              ordersRef.doc(order.id).update(
+                  status: OrderStatus.accepted, acceptedAt: DateTime.now());
+            }
+          },
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: AppButton(
-            buttonColor: Colors.grey,
-            label: '주문 거절',
-            onTap: () {},
+        if (order.status != OrderStatus.declined)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: AppButton(
+              buttonColor: Colors.grey,
+              label: '주문 거절',
+              onTap: () {
+                ordersRef.doc(order.id).update(
+                    status: OrderStatus.declined, declinedAt: DateTime.now());
+              },
+            ),
           ),
-        ),
       ],
     );
   }

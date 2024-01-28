@@ -5,6 +5,7 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../services/auth_provider.dart';
 import '../widgets/order_status_management_tab_bar_view.dart';
 
 class OrderStatusManagementPage extends ConsumerWidget {
@@ -44,12 +45,10 @@ class OrderStatusManagementPage extends ConsumerWidget {
     return FirestoreBuilder(
         ref: ordersRef,
         builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
-          // final orders = snapshot.data?.docs.map((e) => e.data).where((data) =>
-          //         data.storeId ==
-          //         ref.read(authProvider.notifier).currentUser?.email) ??
-          //     [];
-          final orders = snapshot.data?.docs.map((e) => e.data) ?? [];
-          print(orders);
+          final orders = snapshot.data?.docs.map((e) => e.data).where((data) =>
+                  data.storeId ==
+                  ref.read(authProvider.notifier).currentUser?.email) ??
+              [];
           return TabBarView(children: [
             OrderStatusManagementTabBarView(
               models:
