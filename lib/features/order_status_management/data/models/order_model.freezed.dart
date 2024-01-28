@@ -20,16 +20,18 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$OrderModel {
+  @Id()
   String get id => throw _privateConstructorUsedError;
-  String get tableId => throw _privateConstructorUsedError;
+  String get tableName => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
   OrderStatus get status => throw _privateConstructorUsedError;
   String get orderType => throw _privateConstructorUsedError;
-  List<MenuModel> get menus => throw _privateConstructorUsedError;
+  List<OrderItemModel> get items => throw _privateConstructorUsedError;
   DateTime get orderedAt => throw _privateConstructorUsedError;
   DateTime? get acceptedAt => throw _privateConstructorUsedError;
   DateTime? get declinedAt => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
+  int get totalAmount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,16 +46,17 @@ abstract class $OrderModelCopyWith<$Res> {
       _$OrderModelCopyWithImpl<$Res, OrderModel>;
   @useResult
   $Res call(
-      {String id,
-      String tableId,
+      {@Id() String id,
+      String tableName,
       String storeId,
       OrderStatus status,
       String orderType,
-      List<MenuModel> menus,
+      List<OrderItemModel> items,
       DateTime orderedAt,
       DateTime? acceptedAt,
       DateTime? declinedAt,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      int totalAmount});
 }
 
 /// @nodoc
@@ -70,24 +73,25 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
   @override
   $Res call({
     Object? id = null,
-    Object? tableId = null,
+    Object? tableName = null,
     Object? storeId = null,
     Object? status = null,
     Object? orderType = null,
-    Object? menus = null,
+    Object? items = null,
     Object? orderedAt = null,
     Object? acceptedAt = freezed,
     Object? declinedAt = freezed,
     Object? completedAt = freezed,
+    Object? totalAmount = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      tableId: null == tableId
-          ? _value.tableId
-          : tableId // ignore: cast_nullable_to_non_nullable
+      tableName: null == tableName
+          ? _value.tableName
+          : tableName // ignore: cast_nullable_to_non_nullable
               as String,
       storeId: null == storeId
           ? _value.storeId
@@ -101,10 +105,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
           ? _value.orderType
           : orderType // ignore: cast_nullable_to_non_nullable
               as String,
-      menus: null == menus
-          ? _value.menus
-          : menus // ignore: cast_nullable_to_non_nullable
-              as List<MenuModel>,
+      items: null == items
+          ? _value.items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<OrderItemModel>,
       orderedAt: null == orderedAt
           ? _value.orderedAt
           : orderedAt // ignore: cast_nullable_to_non_nullable
@@ -121,6 +125,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -134,16 +142,17 @@ abstract class _$$OrderModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
-      String tableId,
+      {@Id() String id,
+      String tableName,
       String storeId,
       OrderStatus status,
       String orderType,
-      List<MenuModel> menus,
+      List<OrderItemModel> items,
       DateTime orderedAt,
       DateTime? acceptedAt,
       DateTime? declinedAt,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      int totalAmount});
 }
 
 /// @nodoc
@@ -158,24 +167,25 @@ class __$$OrderModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? tableId = null,
+    Object? tableName = null,
     Object? storeId = null,
     Object? status = null,
     Object? orderType = null,
-    Object? menus = null,
+    Object? items = null,
     Object? orderedAt = null,
     Object? acceptedAt = freezed,
     Object? declinedAt = freezed,
     Object? completedAt = freezed,
+    Object? totalAmount = null,
   }) {
     return _then(_$OrderModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      tableId: null == tableId
-          ? _value.tableId
-          : tableId // ignore: cast_nullable_to_non_nullable
+      tableName: null == tableName
+          ? _value.tableName
+          : tableName // ignore: cast_nullable_to_non_nullable
               as String,
       storeId: null == storeId
           ? _value.storeId
@@ -189,10 +199,10 @@ class __$$OrderModelImplCopyWithImpl<$Res>
           ? _value.orderType
           : orderType // ignore: cast_nullable_to_non_nullable
               as String,
-      menus: null == menus
-          ? _value._menus
-          : menus // ignore: cast_nullable_to_non_nullable
-              as List<MenuModel>,
+      items: null == items
+          ? _value._items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<OrderItemModel>,
       orderedAt: null == orderedAt
           ? _value.orderedAt
           : orderedAt // ignore: cast_nullable_to_non_nullable
@@ -209,46 +219,54 @@ class __$$OrderModelImplCopyWithImpl<$Res>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      totalAmount: null == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$OrderModelImpl implements _OrderModel {
   const _$OrderModelImpl(
-      {required this.id,
-      required this.tableId,
+      {@Id() this.id = '',
+      required this.tableName,
       required this.storeId,
-      required this.status,
+      this.status = OrderStatus.wait,
       required this.orderType,
-      required final List<MenuModel> menus,
+      required final List<OrderItemModel> items,
       required this.orderedAt,
       this.acceptedAt,
       this.declinedAt,
-      this.completedAt})
-      : _menus = menus;
+      this.completedAt,
+      required this.totalAmount})
+      : _items = items;
 
   factory _$OrderModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderModelImplFromJson(json);
 
   @override
+  @JsonKey()
+  @Id()
   final String id;
   @override
-  final String tableId;
+  final String tableName;
   @override
   final String storeId;
   @override
+  @JsonKey()
   final OrderStatus status;
   @override
   final String orderType;
-  final List<MenuModel> _menus;
+  final List<OrderItemModel> _items;
   @override
-  List<MenuModel> get menus {
-    if (_menus is EqualUnmodifiableListView) return _menus;
+  List<OrderItemModel> get items {
+    if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_menus);
+    return EqualUnmodifiableListView(_items);
   }
 
   @override
@@ -259,10 +277,12 @@ class _$OrderModelImpl implements _OrderModel {
   final DateTime? declinedAt;
   @override
   final DateTime? completedAt;
+  @override
+  final int totalAmount;
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, tableId: $tableId, storeId: $storeId, status: $status, orderType: $orderType, menus: $menus, orderedAt: $orderedAt, acceptedAt: $acceptedAt, declinedAt: $declinedAt, completedAt: $completedAt)';
+    return 'OrderModel(id: $id, tableName: $tableName, storeId: $storeId, status: $status, orderType: $orderType, items: $items, orderedAt: $orderedAt, acceptedAt: $acceptedAt, declinedAt: $declinedAt, completedAt: $completedAt, totalAmount: $totalAmount)';
   }
 
   @override
@@ -271,12 +291,13 @@ class _$OrderModelImpl implements _OrderModel {
         (other.runtimeType == runtimeType &&
             other is _$OrderModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.tableId, tableId) || other.tableId == tableId) &&
+            (identical(other.tableName, tableName) ||
+                other.tableName == tableName) &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.orderType, orderType) ||
                 other.orderType == orderType) &&
-            const DeepCollectionEquality().equals(other._menus, _menus) &&
+            const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.orderedAt, orderedAt) ||
                 other.orderedAt == orderedAt) &&
             (identical(other.acceptedAt, acceptedAt) ||
@@ -284,7 +305,9 @@ class _$OrderModelImpl implements _OrderModel {
             (identical(other.declinedAt, declinedAt) ||
                 other.declinedAt == declinedAt) &&
             (identical(other.completedAt, completedAt) ||
-                other.completedAt == completedAt));
+                other.completedAt == completedAt) &&
+            (identical(other.totalAmount, totalAmount) ||
+                other.totalAmount == totalAmount));
   }
 
   @JsonKey(ignore: true)
@@ -292,15 +315,16 @@ class _$OrderModelImpl implements _OrderModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      tableId,
+      tableName,
       storeId,
       status,
       orderType,
-      const DeepCollectionEquality().hash(_menus),
+      const DeepCollectionEquality().hash(_items),
       orderedAt,
       acceptedAt,
       declinedAt,
-      completedAt);
+      completedAt,
+      totalAmount);
 
   @JsonKey(ignore: true)
   @override
@@ -318,24 +342,26 @@ class _$OrderModelImpl implements _OrderModel {
 
 abstract class _OrderModel implements OrderModel {
   const factory _OrderModel(
-      {required final String id,
-      required final String tableId,
+      {@Id() final String id,
+      required final String tableName,
       required final String storeId,
-      required final OrderStatus status,
+      final OrderStatus status,
       required final String orderType,
-      required final List<MenuModel> menus,
+      required final List<OrderItemModel> items,
       required final DateTime orderedAt,
       final DateTime? acceptedAt,
       final DateTime? declinedAt,
-      final DateTime? completedAt}) = _$OrderModelImpl;
+      final DateTime? completedAt,
+      required final int totalAmount}) = _$OrderModelImpl;
 
   factory _OrderModel.fromJson(Map<String, dynamic> json) =
       _$OrderModelImpl.fromJson;
 
   @override
+  @Id()
   String get id;
   @override
-  String get tableId;
+  String get tableName;
   @override
   String get storeId;
   @override
@@ -343,7 +369,7 @@ abstract class _OrderModel implements OrderModel {
   @override
   String get orderType;
   @override
-  List<MenuModel> get menus;
+  List<OrderItemModel> get items;
   @override
   DateTime get orderedAt;
   @override
@@ -352,6 +378,8 @@ abstract class _OrderModel implements OrderModel {
   DateTime? get declinedAt;
   @override
   DateTime? get completedAt;
+  @override
+  int get totalAmount;
   @override
   @JsonKey(ignore: true)
   _$$OrderModelImplCopyWith<_$OrderModelImpl> get copyWith =>

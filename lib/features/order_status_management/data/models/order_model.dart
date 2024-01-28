@@ -1,24 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'menu_model.dart';
+import 'order_item.dart';
 
 part 'order_model.freezed.dart';
 part 'order_model.g.dart';
 
 @freezed
 class OrderModel with _$OrderModel {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory OrderModel({
-    required String id,
-    required String tableId,
+    @Id() @Default('') String id,
+    required String tableName,
     required String storeId,
-    required OrderStatus status,
+    @Default(OrderStatus.wait) OrderStatus status,
     required String orderType,
-    required List<MenuModel> menus,
+    required List<OrderItemModel> items,
     required DateTime orderedAt,
     DateTime? acceptedAt,
     DateTime? declinedAt,
     DateTime? completedAt,
+    required int totalAmount,
   }) = _OrderModel;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
@@ -26,4 +29,7 @@ class OrderModel with _$OrderModel {
 }
 
 @JsonEnum(fieldRename: FieldRename.screamingSnake)
-enum OrderStatus { order, accepted, declined, completed }
+enum OrderStatus { wait, accepted, declined, completed }
+
+@Collection<OrderModel>('orders')
+final ordersRef = OrderModelCollectionReference();

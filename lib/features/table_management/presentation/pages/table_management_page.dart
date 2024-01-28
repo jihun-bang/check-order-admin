@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:check_order_admin/features/order_status/presentation/pages/order_status.page.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
 import 'package:check_order_admin/features/table_management/presentation/widgets/order_status_dialog.dart';
 import 'package:check_order_admin/features/table_management/presentation/widgets/table_card_item.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
-import 'package:check_order_admin/features/order_status/presentation/pages/order_status.page.dart';
+import 'package:flutter/material.dart';
 
 class TableManagementPage extends StatelessWidget {
   const TableManagementPage({super.key});
@@ -10,7 +10,7 @@ class TableManagementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void showOrderStatusDialog(
-        {required String tableId, required List<MenuModel> menuList}) {
+        {required String tableId, required List<OrderItemModel> menuList}) {
       showDialog(
         barrierColor: Colors.transparent,
         context: context,
@@ -42,11 +42,11 @@ class TableManagementPage extends StatelessWidget {
                 .map(
                   (order) => TableCardItem(
                     enteredAt: order.orderedAt,
-                    tableId: order.tableId,
-                    menus: order.menus,
+                    tableId: order.tableName,
+                    menus: order.items,
                     onTap: () {
                       showOrderStatusDialog(
-                          tableId: order.tableId, menuList: order.menus);
+                          tableId: order.tableName, menuList: order.items);
                     },
                   ),
                 )
