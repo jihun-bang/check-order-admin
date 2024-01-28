@@ -7,8 +7,8 @@ import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
 import 'package:intl/intl.dart';
 
 class SearchInput {
-  final String startDate;
-  final String endDate;
+  final DateTime startDate;
+  final DateTime endDate;
   final String? tableName;
 
   SearchInput({required this.startDate, required this.endDate, this.tableName});
@@ -57,8 +57,7 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    bool isValid = (startDate.length == 10 && endDate.length == 10) ||
-        tableName.isNotEmpty;
+    bool isValidDate = (startDate.length == 10 && endDate.length == 10);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30),
@@ -137,11 +136,20 @@ class _DateRangeSearchInputState extends State<DateRangeSearchInput> {
                 width: 115,
                 buttonColor: AppColors.orange50,
                 label: '검색',
-                enable: isValid,
+                enable: isValidDate,
                 onTap: () {
+                  DateTime parsedStartDate = DateTime.parse(startDate);
+                  DateTime parsedEndDate = DateTime.parse(endDate);
+                  if (parsedStartDate.isAfter(parsedEndDate)) {
+                    [
+                      parsedStartDate,
+                      parsedEndDate
+                    ] = [parsedEndDate, parsedStartDate];
+                  }
+
                   SearchInput value = SearchInput(
-                    startDate: startDate,
-                    endDate: endDate,
+                    startDate: parsedStartDate,
+                    endDate: parsedEndDate,
                     tableName: tableName,
                   );
 

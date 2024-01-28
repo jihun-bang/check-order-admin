@@ -102,10 +102,9 @@ class _OrderStatusPageState extends State<OrderStatusPage> {
             initialTableName: tableName,
             onConfirm: (v) {
               setState(() {
-                startDate = DateTime.parse(v.startDate);
-                endDate = DateTime.parse(v.endDate);
+                startDate = v.startDate;
+                endDate = v.endDate;
                 tableName = v.tableName ?? '';
-
                 filteredOrders = filterOrders(
                   orders: orders,
                   startDate: startDate,
