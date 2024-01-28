@@ -7,11 +7,9 @@ import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
 
-typedef IntCallback = void Function(int);
-
 class OrderStatusDialog extends StatefulWidget {
   final List<MenuModel> initialOrderedMenuList;
-  final IntCallback onConfirm;
+  final void Function(int) onConfirm;
 
   const OrderStatusDialog({
     super.key,
@@ -29,7 +27,7 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
   @override
   void initState() {
     super.initState();
-    orderedMenuList = widget.initialOrderedMenuList;
+    orderedMenuList = List.from(widget.initialOrderedMenuList);
   }
 
   void _handleRemove(String id) {
