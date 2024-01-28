@@ -1,16 +1,17 @@
-import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:math';
+
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
+import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 typedef IntCallback = void Function(int);
 
 class OrderStatusDialog extends StatefulWidget {
-  final List<MenuModel> initialOrderedMenuList;
+  final List<OrderItemModel> initialOrderedMenuList;
   final IntCallback onConfirm;
 
   const OrderStatusDialog({
@@ -24,7 +25,7 @@ class OrderStatusDialog extends StatefulWidget {
 }
 
 class _OrderStatusDialogState extends State<OrderStatusDialog> {
-  late List<MenuModel> orderedMenuList;
+  late List<OrderItemModel> orderedMenuList;
 
   @override
   void initState() {
@@ -42,11 +43,12 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     setState(() {
       orderedMenuList = orderedMenuList
           .map((menu) => menu.id == id
-              ? MenuModel(
+              ? OrderItemModel(
                   id: menu.id,
-                  name: menu.name,
+                  item: menu.item,
                   count: menu.count + 1,
-                  totalPrice: menu.totalPrice,
+                  totalAmount: menu.totalAmount,
+                  updatedAt: DateTime.now(),
                 )
               : menu)
           .toList();
@@ -57,11 +59,12 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     setState(() {
       orderedMenuList = orderedMenuList
           .map((menu) => menu.id == id
-              ? MenuModel(
+              ? OrderItemModel(
                   id: menu.id,
-                  name: menu.name,
+                  item: menu.item,
+                  totalAmount: menu.totalAmount,
+                  updatedAt: DateTime.now(),
                   count: max(menu.count - 1, 1),
-                  totalPrice: menu.totalPrice,
                 )
               : menu)
           .toList();
@@ -71,7 +74,7 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
   @override
   Widget build(BuildContext context) {
     int totalPrice = orderedMenuList.fold(
-        0, (sum, menu) => sum + menu.totalPrice * menu.count);
+        0, (sum, menu) => sum + menu.totalAmount * menu.count);
 
     void showSettlementDialog() {
       showDialog(
@@ -134,13 +137,13 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     );
   }
 
-  Widget _menuList({required List<MenuModel> menuList}) {
+  Widget _menuList({required List<OrderItemModel> menuList}) {
     return Wrap(
       children: menuList
           .map((menu) => _menuItem(
                 id: menu.id,
-                name: menu.name,
-                price: menu.totalPrice,
+                name: menu.item.name,
+                price: menu.totalAmount,
                 count: menu.count,
               ))
           .toList(),

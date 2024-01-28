@@ -2,27 +2,16 @@ import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/utils/extension.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/models/menu_item_model.dart';
-
 class OrderItem extends StatelessWidget {
-  final DateTime orderedAt;
-  final String tableName;
-  final String orderId;
-  final String menuType;
-  final List<MenuItemModel> menus;
-  final int totalPrice;
+  final OrderModel order;
 
   const OrderItem({
     super.key,
-    required this.orderedAt,
-    required this.tableName,
-    required this.orderId,
-    required this.menuType,
-    required this.menus,
-    required this.totalPrice,
+    required this.order,
   });
 
   @override
@@ -40,7 +29,7 @@ class OrderItem extends StatelessWidget {
   }
 
   Widget get _buildLeft {
-    final diffDate = DateTime.now().difference(orderedAt);
+    final diffDate = DateTime.now().difference(order.orderedAt);
     final String date = '${diffDate.inMinutes}분 전';
 
     return Column(
@@ -52,13 +41,13 @@ class OrderItem extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
-            '$tableName 테이블',
+            '${order.tableName} 테이블',
             textAlign: TextAlign.center,
             style: AppTextStyle.head36b128,
           ),
         ),
         Text(
-          DateFormat('H:m').format(orderedAt),
+          DateFormat('H:m').format(order.orderedAt),
           style: AppTextStyle.title22b136,
         ),
       ],
@@ -69,16 +58,16 @@ class OrderItem extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '주문 번호 #$orderId',
+          '주문 번호 #${order.id}',
           style: AppTextStyle.title18b136.copyWith(color: AppColors.gray60),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: menus
+            children: order.items
                 .map((e) => Text(
-                      '${e.name} ${e.count}개',
+                      '${e.item.name} ${e.count}개',
                       textAlign: TextAlign.center,
                       style: AppTextStyle.head28b136,
                     ))
@@ -86,7 +75,7 @@ class OrderItem extends StatelessWidget {
           ),
         ),
         Text(
-          '[$menuType ${menus.length}개] ${totalPrice.toCommaString('원')}',
+          '[${order.orderType} ${order.items.length}개] ${order.totalAmount.toCommaString('원')}',
           style: AppTextStyle.title22b136.copyWith(color: AppColors.gray80),
         ),
       ],

@@ -1,22 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
+import 'package:flutter/material.dart';
 
 List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
   List<Map<String, dynamic>> flattenedMenus = [];
 
   for (var order in orders) {
-    for (var menu in order.menus) {
+    for (var menu in order.items) {
       flattenedMenus.add({
         'id': order.id,
-        'tableId': order.tableId,
+        'tableId': order.tableName,
         'storeId': order.storeId,
         'status': order.status,
         'orderType': order.orderType,
         'menuId': menu.id,
-        'name': menu.name,
-        'totalPrice': menu.totalPrice,
+        'name': menu.item.name,
+        'totalPrice': menu.totalAmount,
         'count': menu.count,
         'orderedAt': order.orderedAt,
         'acceptedAt': order.acceptedAt,

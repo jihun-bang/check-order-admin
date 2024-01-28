@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_item.dart';
 import 'package:check_order_admin/features/order_status/presentation/widgets/date_range_search_input.dart';
 import 'package:check_order_admin/features/order_status/presentation/widgets/order_status_table.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/menu_model.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 List<OrderModel> filterOrders(
@@ -18,7 +19,7 @@ List<OrderModel> filterOrders(
       order.orderedAt.day,
     );
 
-    final containsTableName = order.tableId.contains(tableName);
+    final containsTableName = order.tableName.contains(tableName);
 
     if (startDate == null || endDate == null) {
       return containsTableName;
@@ -38,39 +39,66 @@ List<OrderModel> filterOrders(
 List<OrderModel> orders = [
   OrderModel(
     id: 'id',
-    tableId: 'A1',
+    tableName: 'A1',
     storeId: 'storeId',
     status: OrderStatus.accepted,
     orderType: '메뉴',
-    menus: const [
-      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 3),
-      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 1),
+    items: [
+      OrderItemModel(
+          id: '1',
+          item: MenuItemModel(id: '1', name: '육개장', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 3000),
+      OrderItemModel(
+          id: '2',
+          item: MenuItemModel(id: '2', name: '계란말이', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 50000),
     ],
     orderedAt: DateTime.now(),
+    totalAmount: 53000,
   ),
   OrderModel(
     id: 'id',
-    tableId: 'B1',
+    tableName: 'B1',
     storeId: 'storeId',
     status: OrderStatus.accepted,
     orderType: '메뉴',
-    menus: const [
-      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 4),
-      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 2),
+    items: [
+      OrderItemModel(
+          id: '1',
+          item: MenuItemModel(id: '1', name: '육개장', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 3000),
+      OrderItemModel(
+          id: '2',
+          item: MenuItemModel(id: '2', name: '계란말이', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 50000),
     ],
     orderedAt: DateTime.now(),
+    totalAmount: 53000,
   ),
   OrderModel(
     id: 'id',
-    tableId: 'A2',
+    tableName: 'A2',
     storeId: 'storeId',
     status: OrderStatus.accepted,
     orderType: '메뉴',
-    menus: const [
-      MenuModel(id: '1', name: '육개장', totalPrice: 3000, count: 2),
-      MenuModel(id: '2', name: '계란말이', totalPrice: 50000, count: 2),
+    items: [
+      OrderItemModel(
+          id: '1',
+          item: MenuItemModel(id: '1', name: '육개장', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 3000),
+      OrderItemModel(
+          id: '2',
+          item: MenuItemModel(id: '2', name: '계란말이', category: '탕'),
+          updatedAt: DateTime.now(),
+          totalAmount: 50000),
     ],
     orderedAt: DateTime(2024, 01, 3),
+    totalAmount: 53000,
   ),
 ];
 
