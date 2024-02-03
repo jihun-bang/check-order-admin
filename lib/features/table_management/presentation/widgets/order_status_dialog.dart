@@ -33,16 +33,16 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
 
   void _handleRemove(String id) {
     setState(() {
-      orderedMenuList.removeWhere((menu) => menu.id == id);
+      orderedMenuList.removeWhere((menu) => menu.item.id == id);
     });
   }
 
   void _handleIncCount(String id) {
     setState(() {
       orderedMenuList = orderedMenuList
-          .map((menu) => menu.id == id
+          .map((menu) => menu.item.id == id
               ? OrderItemModel(
-                  id: menu.id,
+                  id: menu.item.id,
                   item: menu.item,
                   count: menu.count + 1,
                   totalAmount: menu.totalAmount,
@@ -56,9 +56,9 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
   void _handleDecCount(String id) {
     setState(() {
       orderedMenuList = orderedMenuList
-          .map((menu) => menu.id == id
+          .map((menu) => menu.item.id == id
               ? OrderItemModel(
-                  id: menu.id,
+                  id: menu.item.id,
                   item: menu.item,
                   totalAmount: menu.totalAmount,
                   updatedAt: DateTime.now(),
@@ -72,7 +72,7 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
   @override
   Widget build(BuildContext context) {
     int totalPrice = orderedMenuList.fold(
-        0, (sum, menu) => sum + menu.totalAmount * menu.count);
+        0, (sum, menu) => sum + menu.item.price * menu.count);
 
     void showSettlementDialog() {
       showDialog(
@@ -148,9 +148,9 @@ class _OrderStatusDialogState extends State<OrderStatusDialog> {
     return Wrap(
       children: menuList
           .map((menu) => _menuItem(
-                id: menu.id,
+                id: menu.item.id,
                 name: menu.item.name,
-                price: menu.totalAmount,
+                price: menu.item.price,
                 count: menu.count,
               ))
           .toList(),
