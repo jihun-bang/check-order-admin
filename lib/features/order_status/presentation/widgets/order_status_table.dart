@@ -2,6 +2,27 @@ import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+String dateFormatter(DateTime? dateTime) {
+  if (dateTime == null) return '';
+  return DateFormat("yyyy-MM-dd HH:mm").format(dateTime);
+}
+
+String statusFormatter(OrderStatus status) {
+  switch (status) {
+    case OrderStatus.accepted:
+      return '수락';
+    case OrderStatus.completed:
+      return '완료';
+    case OrderStatus.declined:
+      return '거절';
+    case OrderStatus.wait:
+      return '대기';
+    default:
+      return '';
+  }
+}
 
 List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
   List<Map<String, dynamic>> flattenedMenus = [];
@@ -12,16 +33,16 @@ List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
         'id': order.id,
         'tableId': order.tableName,
         'storeId': order.storeId,
-        'status': order.status,
+        'status': statusFormatter(order.status),
         'orderType': order.orderType,
         'menuId': menu.id,
         'name': menu.item.name,
         'totalPrice': menu.totalAmount,
         'count': menu.count,
-        'orderedAt': order.orderedAt,
-        'acceptedAt': order.acceptedAt,
-        'declinedAt': order.declinedAt,
-        'completedAt': order.completedAt,
+        'orderedAt': dateFormatter(order.orderedAt),
+        'acceptedAt': dateFormatter(order.acceptedAt),
+        'declinedAt': dateFormatter(order.declinedAt),
+        'completedAt': dateFormatter(order.completedAt),
       });
     }
   }
