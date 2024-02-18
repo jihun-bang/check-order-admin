@@ -1,46 +1,19 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_item.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_option.dart';
 import 'package:check_order_admin/features/menu_management/presentation/widgets/menu_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class SwitchValueModel {
-  bool isExposed;
-  bool isInStock;
-  bool isBest;
-  bool isOptionNecessary;
-
-  SwitchValueModel({
-    required this.isExposed,
-    required this.isInStock,
-    required this.isBest,
-    required this.isOptionNecessary,
-  });
-}
-
-class MenuOptionModel {
-  String title;
-  int price;
-
-  MenuOptionModel(this.title, this.price);
-}
-
-var options = [
-  MenuOptionModel('라면사리', 2000),
-  MenuOptionModel('우동사리', 2000),
-  MenuOptionModel('쫄면사리', 3000)
-];
-
-var switchValue = SwitchValueModel(
-  isBest: true,
-  isExposed: false,
-  isInStock: true,
-  isOptionNecessary: false,
-);
-
 class MenuItem extends StatelessWidget {
-  const MenuItem({super.key});
+  final MenuItemModel menu;
+
+  const MenuItem({
+    super.key,
+    required this.menu,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +23,10 @@ class MenuItem extends StatelessWidget {
           context: context,
           pageBuilder: (_, __, ___) {
             return MenuEditDialog(
-              onConfirm: () {
-                print('[API] save menu settings');
+              menu: menu,
+              category: menu.category,
+              onConfirm: (MenuItemModel menu) {
+                menusRef.doc(menu.id).set(menu);
               },
             );
           });
@@ -66,7 +41,7 @@ class MenuItem extends StatelessWidget {
               label: '메뉴를 삭제하시겠습니까?',
               confirmLabel: '삭제하기',
               onConfirm: () {
-                print('[API] delete menu');
+                menusRef.doc(menu.id).delete();
               },
             ),
           );
@@ -80,7 +55,10 @@ class MenuItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _imageCard(
-              price: 24000, title: '이게뭐야', url: 'assets/images/img_menu.png'),
+            price: menu.price,
+            title: menu.name,
+            url: 'assets/images/img_menu.png',
+          ),
           Expanded(
             flex: 1,
             child: Container(
@@ -93,7 +71,7 @@ class MenuItem extends StatelessWidget {
                   _categoryDropdown(
                       options: ['카테고리1', '카테고리2', '카테고리3'],
                       selectedOption: '카테고리1'),
-                  _switchList(switchValue: switchValue)
+                  _switchList(menu: menu)
                 ],
               ),
             ),
@@ -111,7 +89,7 @@ class MenuItem extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                _optionInfo(options: options)
+                if (menu.options.isNotEmpty) _optionInfo(options: menu.options)
               ],
             ),
           )
@@ -239,40 +217,62 @@ class MenuItem extends StatelessWidget {
     );
   }
 
-  Widget _switchList({required SwitchValueModel switchValue}) {
-    final switches = [
-      {'label': '노출', 'value': switchValue.isExposed},
-      {'label': '재고', 'value': switchValue.isInStock},
-      {'label': '베스트', 'value': switchValue.isBest},
-      {'label': '옵션 필수', 'value': switchValue.isOptionNecessary},
-    ];
-
+  Widget _switchList({
+    required MenuItemModel menu,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: switches
-          .map((switchData) => Wrap(
-                direction: Axis.vertical,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 20,
-                children: [
-                  Text(
-                    switchData['label'] as String,
-                    style: AppTextStyle.body20sb136
-                        .copyWith(color: AppColors.gray60),
-                  ),
-                  Switch(
-                      activeColor: Colors.white,
-                      inactiveThumbColor: Colors.white,
-                      activeTrackColor: AppColors.orange40,
-                      inactiveTrackColor: AppColors.gray40,
-                      value: switchData['value'] as bool,
-                      onChanged: (value) {
-                        print('[API] set ${switchData['label']} to $value');
-                      })
-                ],
-              ))
-          .toList(),
+      children: [
+        _switch(
+            label: '노출',
+            value: menu.isExposed,
+            onChanged: (value) {
+              menusRef.doc(menu.id).update(isExposed: value);
+            }),
+        _switch(
+            label: '재고',
+            value: !menu.isSoldOut,
+            onChanged: (value) {
+              menusRef.doc(menu.id).update(isSoldOut: !value);
+            }),
+        _switch(
+            label: '베스트',
+            value: menu.isPopular,
+            onChanged: (value) {
+              menusRef.doc(menu.id).update(isPopular: value);
+            }),
+        _switch(
+            label: '옵션 필수',
+            value: menu.isOptionNecessary,
+            onChanged: (value) {
+              menusRef.doc(menu.id).update(isOptionNecessary: value);
+            }),
+      ],
+    );
+  }
+
+  Widget _switch(
+      {required String label,
+      required bool value,
+      required Function(bool) onChanged}) {
+    return Wrap(
+      direction: Axis.vertical,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 20,
+      children: [
+        Text(
+          label,
+          style: AppTextStyle.body20sb136.copyWith(color: AppColors.gray60),
+        ),
+        Switch(
+            activeColor: Colors.white,
+            inactiveThumbColor: Colors.white,
+            activeTrackColor: AppColors.orange40,
+            inactiveTrackColor: AppColors.gray40,
+            value: value,
+            onChanged: onChanged)
+      ],
     );
   }
 
@@ -295,7 +295,7 @@ class MenuItem extends StatelessWidget {
               SizedBox(
                 width: 100,
                 child: Text(
-                  option.title,
+                  option.name,
                   style:
                       AppTextStyle.body16b136.copyWith(color: AppColors.gray80),
                 ),

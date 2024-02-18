@@ -1,16 +1,19 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_item.dart';
 import 'package:check_order_admin/features/menu_management/presentation/widgets/menu_edit_dialog.dart';
 import 'package:check_order_admin/features/menu_management/presentation/widgets/menu_item.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class MenuManagementTabBarView extends StatelessWidget {
-  final List models;
+  final String category;
+  final List<MenuItemModel> menus;
 
   const MenuManagementTabBarView({
     super.key,
-    required this.models,
+    required this.category,
+    required this.menus,
   });
 
   @override
@@ -21,8 +24,9 @@ class MenuManagementTabBarView extends StatelessWidget {
           context: context,
           pageBuilder: (_, __, ___) {
             return MenuEditDialog(
-              onConfirm: () {
-                print('[API] add new menu');
+              category: category,
+              onConfirm: (MenuItemModel menu) {
+                menusRef.add(menu);
               },
             );
           });
@@ -41,7 +45,7 @@ class MenuManagementTabBarView extends StatelessWidget {
         Expanded(
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            children: models.map((model) => const MenuItem()).toList(),
+            children: menus.map((menu) => MenuItem(menu: menu)).toList(),
           ),
         ),
       ],

@@ -1,38 +1,48 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_item.dart';
 import 'package:check_order_admin/features/menu_management/presentation/widgets/category_add_dialog.dart';
 import 'package:check_order_admin/features/menu_management/presentation/widgets/menu_management_tab_bar_view.dart';
+import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MenuManagementPage extends StatefulWidget {
+List<String> extractCategories(List<MenuItemModel> menuItems) {
+  Set<String> categories = {};
+
+  for (var menuItem in menuItems) {
+    categories.add(menuItem.category);
+  }
+
+  return categories.toList();
+}
+
+class MenuManagementPage extends ConsumerStatefulWidget {
   const MenuManagementPage({super.key});
 
   @override
-  State<MenuManagementPage> createState() => _MenuManagementPageState();
+  _MenuManagementPageState createState() => _MenuManagementPageState();
 }
 
-class _MenuManagementPageState extends State<MenuManagementPage>
+class _MenuManagementPageState extends ConsumerState<MenuManagementPage>
     with TickerProviderStateMixin {
+  late List<String> categories;
   late TabController _tabController;
-  late List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
-    _tabs = [
-      const Tab(text: '직원호출(9)'),
-      const Tab(text: '국물요리(11)'),
-      const Tab(text: '튀김요리(3)')
-    ];
-    _tabController = TabController(length: _tabs.length + 1, vsync: this);
+    categories = extractCategories(menus);
+    _tabController = TabController(length: categories.length + 1, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     void addTab(value) {
       setState(() {
-        _tabs.add(Tab(text: value));
-        _tabController = TabController(length: _tabs.length + 1, vsync: this);
+        categories.add(value);
+        _tabController =
+            TabController(length: categories.length + 1, vsync: this);
       });
     }
 
@@ -50,14 +60,21 @@ class _MenuManagementPageState extends State<MenuManagementPage>
       );
     }
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        body: Column(children: [
-          _tabBar(showCategoryAddDialog: showCategoryAddDialog),
-          Expanded(child: _buildTabBarView),
-        ]),
-      ),
+    return FirestoreBuilder(
+      ref: menusRef,
+      builder: (_, AsyncSnapshot<MenuItemModelQuerySnapshot> snapshot, __) {
+        final menus = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
+
+        return DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            body: Column(children: [
+              _tabBar(showCategoryAddDialog: showCategoryAddDialog),
+              Expanded(child: _buildTabBarView(menus: menus)),
+            ]),
+          ),
+        );
+      },
     );
   }
 
@@ -68,9 +85,12 @@ class _MenuManagementPageState extends State<MenuManagementPage>
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: AppColors.orange40,
       controller: _tabController,
-      tabs: [..._tabs, const Tab(text: '+ 카테고리')],
+      tabs: [
+        ...categories.map((menu) => Tab(text: menu)).toList(),
+        const Tab(text: '+ 카테고리')
+      ],
       onTap: (index) {
-        if (index == _tabs.length) {
+        if (index == categories.length) {
           showCategoryAddDialog();
         } else {
           _tabController.animateTo(index);
@@ -79,13 +99,14 @@ class _MenuManagementPageState extends State<MenuManagementPage>
     );
   }
 
-  TabBarView get _buildTabBarView {
+  TabBarView _buildTabBarView({required List<MenuItemModel> menus}) {
     return TabBarView(
       controller: _tabController,
       children: [
-        for (var _ in _tabs)
-          const MenuManagementTabBarView(
-            models: [],
+        for (var category in categories)
+          MenuManagementTabBarView(
+            category: category,
+            menus: menus.where((menu) => menu.category == category).toList(),
           ),
         Container()
       ],
