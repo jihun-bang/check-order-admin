@@ -3,40 +3,60 @@ import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/core/widgets/buttons/app_button.dart';
 import 'package:check_order_admin/core/widgets/dialog/app_dialog.dart';
 import 'package:check_order_admin/core/widgets/text_field/app_text_field.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_item.dart';
+import 'package:check_order_admin/features/menu_management/data/models/menu_option.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MenuOptionModel {
-  String title;
-  int price;
+class StringMenuOptionModel {
+  final String name;
+  final String price;
 
-  MenuOptionModel(this.title, this.price);
+  StringMenuOptionModel({
+    this.name = '',
+    this.price = '',
+  });
 }
 
-// final options = [
-//   MenuOptionModel('라면사리', 2000),
-//   MenuOptionModel('우동사리', 2000),
-//   MenuOptionModel('쫄면사리', 3000)
-// ];
+StringMenuOptionModel defaultOption = StringMenuOptionModel();
 
-class MenuEditDialog extends StatelessWidget {
-  final String? title;
-  final int? price;
-  final String? description;
-  final List<String>? imgUrls;
-  final List<MenuOptionModel> options;
-  final void Function() onConfirm;
+class MenuEditDialog extends StatefulWidget {
+  final MenuItemModel? menu;
+  final String category;
+  final void Function(MenuItemModel menu) onConfirm;
 
   const MenuEditDialog({
     super.key,
-    this.title,
-    this.price,
-    this.description,
-    this.imgUrls,
-    this.options = const [],
+    this.menu,
+    required this.category,
     required this.onConfirm,
   });
+
+  @override
+  State<MenuEditDialog> createState() => _MenuEditDialogState();
+}
+
+class _MenuEditDialogState extends State<MenuEditDialog> {
+  late String name;
+  late String price;
+  late String description;
+  late List<StringMenuOptionModel> options;
+
+  @override
+  void initState() {
+    super.initState();
+    name = widget.menu?.name ?? '';
+    price = widget.menu?.price.toString() ?? '';
+    description = widget.menu?.description ?? '';
+
+    List<StringMenuOptionModel> widgetOptions = widget.menu?.options
+            .map((option) => StringMenuOptionModel(
+                name: option.name, price: option.price.toString()))
+            .toList() ??
+        [];
+    options = widgetOptions.isEmpty ? [defaultOption] : widgetOptions;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +88,9 @@ class MenuEditDialog extends StatelessWidget {
               label: '추가 옵션을 모두 삭제하시겠습니까?',
               confirmLabel: '삭제하기',
               onConfirm: () {
-                print('delete all options');
+                setState(() {
+                  options = [defaultOption];
+                });
               },
             ),
           );
@@ -112,9 +134,11 @@ class MenuEditDialog extends StatelessWidget {
                       children: [
                         _title('메뉴명'),
                         AppTextField(
-                          initText: title,
+                          initText: name,
                           onChanged: (value) {
-                            print('set title state to $value');
+                            setState(() {
+                              name = value;
+                            });
                           },
                           width: 510,
                           fontSize: 16,
@@ -128,10 +152,11 @@ class MenuEditDialog extends StatelessWidget {
                       children: [
                         _title('가격(원)'),
                         AppTextField(
-                          initText: price?.toString(),
+                          initText: price,
                           onChanged: (value) {
-                            print(
-                                'set price state to ${num.tryParse(value) ?? 0}');
+                            setState(() {
+                              price = value;
+                            });
                           },
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
@@ -150,7 +175,9 @@ class MenuEditDialog extends StatelessWidget {
                         AppTextField(
                           initText: description,
                           onChanged: (value) {
-                            print('set description state to $value');
+                            setState(() {
+                              description = value;
+                            });
                           },
                           maxLines: 5,
                           width: 510,
@@ -208,7 +235,11 @@ class MenuEditDialog extends StatelessWidget {
                                   ),
                                   color: AppColors.orange40,
                                   onPressed: () {
-                                    print('add {} to options state');
+                                    setState(
+                                      () {
+                                        options = [defaultOption, ...options];
+                                      },
+                                    );
                                   },
                                 ),
                                 IconButton(
@@ -235,13 +266,13 @@ class MenuEditDialog extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            if (options.isEmpty) _optionItem(),
-                            ...(options.map((option) {
-                              return _optionItem(
-                                title: option.title,
-                                price: option.price,
-                              );
-                            }).toList()),
+                            ...List.generate(
+                                options.length,
+                                (i) => _optionItem(
+                                      idx: i,
+                                      title: options[i].name,
+                                      price: options[i].price,
+                                    )),
                           ],
                         )
                       ],
@@ -273,7 +304,26 @@ class MenuEditDialog extends StatelessWidget {
                       label: '저장하기',
                       buttonColor: AppColors.orange50,
                       onTap: () {
-                        onConfirm();
+                        List<MenuOptionModel> filteredOptions = options
+                            .where((element) => element.name.isNotEmpty)
+                            .map((element) => MenuOptionModel(
+                                name: element.name,
+                                price: int.tryParse(element.price) ?? 0))
+                            .toList();
+
+                        MenuItemModel updatedMenu = widget.menu?.copyWith(
+                                name: name,
+                                price: int.tryParse(price) ?? 0,
+                                description: description,
+                                options: filteredOptions) ??
+                            MenuItemModel(
+                                name: name,
+                                category: widget.category,
+                                price: int.tryParse(price) ?? 0,
+                                description: description,
+                                options: filteredOptions);
+
+                        widget.onConfirm(updatedMenu);
                         closeDialog();
                       }),
                 )
@@ -342,7 +392,7 @@ class MenuEditDialog extends StatelessWidget {
     );
   }
 
-  Widget _optionItem({String? title, int? price}) {
+  Widget _optionItem({required int idx, String? title, String? price}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,7 +404,21 @@ class MenuEditDialog extends StatelessWidget {
               child: AppTextField(
                 initText: title,
                 onChanged: (value) {
-                  print('set option title to $value');
+                  setState(
+                    () {
+                      List<StringMenuOptionModel> newOptions = options
+                          .asMap()
+                          .map((i, e) => i == idx
+                              ? MapEntry(
+                                  i,
+                                  StringMenuOptionModel(
+                                      name: value, price: e.price))
+                              : MapEntry(i, e))
+                          .values
+                          .toList();
+                      options = newOptions;
+                    },
+                  );
                 },
                 width: 400,
                 fontSize: 16,
@@ -363,7 +427,22 @@ class MenuEditDialog extends StatelessWidget {
             AppTextField(
               initText: price?.toString(),
               onChanged: (value) {
-                print('set option price to ${num.tryParse(value) ?? 0}');
+                setState(
+                  () {
+                    List<StringMenuOptionModel> newOptions = options
+                        .asMap()
+                        .map((i, e) => i == idx
+                            ? MapEntry(
+                                i,
+                                StringMenuOptionModel(
+                                    name: e.name, price: value))
+                            : MapEntry(i, e))
+                        .values
+                        .toList();
+
+                    options = newOptions;
+                  },
+                );
               },
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
@@ -380,7 +459,15 @@ class MenuEditDialog extends StatelessWidget {
           ),
           color: AppColors.gray40,
           onPressed: () {
-            print('delete option from options state');
+            setState(
+              () {
+                if (options.length == 1) {
+                  options = [defaultOption];
+                } else {
+                  options = List.from(options).removeAt(idx);
+                }
+              },
+            );
           },
         ),
       ],
