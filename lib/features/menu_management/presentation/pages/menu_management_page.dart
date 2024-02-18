@@ -17,23 +17,53 @@ List<String> extractCategories(List<MenuItemModel> menuItems) {
   return categories.toList();
 }
 
-class MenuManagementPage extends ConsumerStatefulWidget {
+class MenuManagementPage extends ConsumerWidget {
   const MenuManagementPage({super.key});
 
   @override
-  _MenuManagementPageState createState() => _MenuManagementPageState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FirestoreBuilder(
+      ref: menusRef,
+      builder: (_, AsyncSnapshot<MenuItemModelQuerySnapshot> snapshot, __) {
+        final menus = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
+        return MenuManagement(menus: menus);
+      },
+    );
+  }
 }
 
-class _MenuManagementPageState extends ConsumerState<MenuManagementPage>
+class MenuManagement extends StatefulWidget {
+  final List<MenuItemModel> menus;
+
+  const MenuManagement({super.key, required this.menus});
+
+  @override
+  _MenuManagementState createState() => _MenuManagementState();
+}
+
+class _MenuManagementState extends State<MenuManagement>
     with TickerProviderStateMixin {
   late List<String> categories;
   late TabController _tabController;
+  late List<MenuItemModel> menus;
 
   @override
   void initState() {
     super.initState();
-    categories = extractCategories(menus);
+    menus = widget.menus;
+    categories = extractCategories(widget.menus);
     _tabController = TabController(length: categories.length + 1, vsync: this);
+  }
+
+  @override
+  void didUpdateWidget(covariant MenuManagement oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.menus != widget.menus) {
+      menus = widget.menus;
+      categories = extractCategories(widget.menus);
+      _tabController =
+          TabController(length: categories.length + 1, vsync: this);
+    }
   }
 
   @override
@@ -60,21 +90,14 @@ class _MenuManagementPageState extends ConsumerState<MenuManagementPage>
       );
     }
 
-    return FirestoreBuilder(
-      ref: menusRef,
-      builder: (_, AsyncSnapshot<MenuItemModelQuerySnapshot> snapshot, __) {
-        final menus = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
-
-        return DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            body: Column(children: [
-              _tabBar(showCategoryAddDialog: showCategoryAddDialog),
-              Expanded(child: _buildTabBarView(menus: menus)),
-            ]),
-          ),
-        );
-      },
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        body: Column(children: [
+          _tabBar(showCategoryAddDialog: showCategoryAddDialog),
+          Expanded(child: _buildTabBarView(menus: menus)),
+        ]),
+      ),
     );
   }
 
@@ -106,6 +129,7 @@ class _MenuManagementPageState extends ConsumerState<MenuManagementPage>
         for (var category in categories)
           MenuManagementTabBarView(
             category: category,
+            categories: categories,
             menus: menus.where((menu) => menu.category == category).toList(),
           ),
         Container()

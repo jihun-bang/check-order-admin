@@ -9,10 +9,12 @@ import 'package:intl/intl.dart';
 
 class MenuItem extends StatelessWidget {
   final MenuItemModel menu;
+  final List<String> categories;
 
   const MenuItem({
     super.key,
     required this.menu,
+    required this.categories,
   });
 
   @override
@@ -69,8 +71,7 @@ class MenuItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _categoryDropdown(
-                      options: ['카테고리1', '카테고리2', '카테고리3'],
-                      selectedOption: '카테고리1'),
+                      options: categories, selectedOption: menu.category),
                   _switchList(menu: menu)
                 ],
               ),
@@ -173,7 +174,8 @@ class MenuItem extends StatelessWidget {
                   );
                 }).toList(),
                 onChanged: (v) {
-                  print('[API] set category to $v');
+                  if (v == null) return;
+                  menusRef.doc(menu.id).update(category: v);
                 }),
           ),
         )

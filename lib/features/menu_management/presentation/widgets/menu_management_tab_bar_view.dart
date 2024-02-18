@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 
 class MenuManagementTabBarView extends StatelessWidget {
   final String category;
+  final List<String> categories;
   final List<MenuItemModel> menus;
 
   const MenuManagementTabBarView({
     super.key,
     required this.category,
+    required this.categories,
     required this.menus,
   });
 
@@ -45,7 +47,12 @@ class MenuManagementTabBarView extends StatelessWidget {
         Expanded(
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            children: menus.map((menu) => MenuItem(menu: menu)).toList(),
+            children: menus
+                .map((menu) => MenuItem(
+                      menu: menu,
+                      categories: categories,
+                    ))
+                .toList(),
           ),
         ),
       ],
