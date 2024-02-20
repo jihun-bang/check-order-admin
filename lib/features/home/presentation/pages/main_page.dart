@@ -1,7 +1,6 @@
 import 'package:check_order_admin/core/theme/colors.dart';
 import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/routes/routes.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,24 +39,23 @@ class _MainPageState extends State<MainPage> {
       child: SafeArea(
         child: Container(
           alignment: Alignment.topCenter,
-          height: 44,
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: MainPage.nav
-                  .mapIndexed((index, e) => _barItem(label: e, index: index))
-                  .toList()),
+          height: 80,
+          child: DefaultTabController(length: 5, child: _tabBar),
         ),
       ),
     );
   }
 
-  Widget _barItem({required String label, required int index}) {
-    return Expanded(
-      child: InkWell(
-        focusColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        onTap: () {
+  Widget get _tabBar {
+    return Container(
+      color: AppColors.gray10,
+      child: TabBar(
+        labelStyle:
+            AppTextStyle.title22b136.copyWith(color: AppColors.orange40),
+        unselectedLabelColor: Colors.black,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: const BoxDecoration(color: Colors.white),
+        onTap: (index) {
           switch (index) {
             case 0:
               const OrderStatusManagementRoute().go(context);
@@ -71,17 +69,7 @@ class _MainPageState extends State<MainPage> {
               const SettingRoute().go(context);
           }
         },
-        child: Container(
-          height: 44,
-          alignment: Alignment.center,
-          color: index == widget.navigationShell.currentIndex
-              ? AppColors.orange40
-              : Colors.white,
-          child: Text(
-            label,
-            style: AppTextStyle.title22b136,
-          ),
-        ),
+        tabs: MainPage.nav.map((e) => Tab(height: 80, text: e)).toList(),
       ),
     );
   }
