@@ -1,10 +1,11 @@
 import 'package:check_order_admin/core/theme/text_style.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
+import 'package:check_order_admin/core/utils/logger.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/features/table_management/presentation/widgets/order_status_dialog.dart';
 import 'package:check_order_admin/features/table_management/presentation/widgets/table_card_item.dart';
 import 'package:check_order_admin/services/auth_provider.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,7 +21,7 @@ class TableManagementPage extends ConsumerStatefulWidget {
 class _TableManagementPageState extends ConsumerState<TableManagementPage> {
   String? get _storeId => ref.read(authProvider.notifier).currentUser?.email;
 
-  void showOrderStatusDialog({required OrderModel order}) {
+  void showOrderStatusDialog({required List<OrderModel> orders}) {
     showDialog(
       barrierColor: Colors.transparent,
       context: context,
@@ -29,12 +30,20 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
           insetPadding: const EdgeInsets.only(bottom: 44),
           alignment: Alignment.topRight,
           child: OrderStatusDialog(
-            initialOrderedMenuList: order.items,
-            onConfirm: (totalPrice) {
-              ordersRef
-                  .doc(order.id)
-                  .update(isSettlement: true, settlementAt: DateTime.now());
-              context.pop();
+            initialOrderedMenuList:
+                orders.map((e) => e.items).flattened.toList(),
+            onConfirm: (totalPrice) async {
+              for (var order in orders) {
+                Logger.d(order.id);
+                await ordersRef.doc(order.id).update(
+                      isSettlement: true,
+                      settlementAt: DateTime.now(),
+                      status: OrderStatus.completed,
+                    );
+              }
+              if (context.mounted) {
+                context.pop();
+              }
             },
           ),
         );
@@ -58,14 +67,16 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
     return FirestoreBuilder(
       ref: ordersRef
           .whereStoreId(isEqualTo: _storeId)
-          .whereStatus(isEqualTo: OrderStatus.accepted),
+          .whereStatus(whereIn: [OrderStatus.completed, OrderStatus.accepted]),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
-        final completedOrders = snapshot.data?.docs
+        final orders = snapshot.data?.docs
                 .map((e) => e.data)
-                .where((data) => !data.isSettlement) ??
+                .where((data) => !data.isSettlement)
+                .sortedBy((element) => element.orderedAt)
+                .toList() ??
             [];
 
-        if (completedOrders.isEmpty) {
+        if (orders.isEmpty) {
           return const Center(
             child: Text(
               '테이블이 없습니다.',
@@ -74,24 +85,15 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
           );
         }
 
-        Map<String, OrderModel> groupedOrders = {};
+        Map<String, List<OrderModel>> groupedOrders = {};
 
-        for (var order in completedOrders) {
-          String tableName = order.tableName;
-          OrderModel? prev = groupedOrders[tableName];
-
-          if (prev == null) {
-            groupedOrders[tableName] = order;
+        for (var order in orders) {
+          final tableName = order.tableName;
+          List<OrderModel> prev = groupedOrders[tableName] ?? [];
+          if (prev.isEmpty) {
+            groupedOrders[tableName] = [order];
           } else {
-            List<OrderItemModel> items = List.from(prev.items);
-            items.addAll(order.items);
-
-            final DateTime orderedAt = prev.orderedAt.isBefore(order.orderedAt)
-                ? prev.orderedAt
-                : order.orderedAt;
-
-            groupedOrders[tableName] =
-                prev.copyWith(items: items, orderedAt: orderedAt);
+            groupedOrders[tableName]?.add(order);
           }
         }
 
@@ -102,11 +104,11 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
           children: groupedOrders.values
               .map(
                 (order) => TableCardItem(
-                  enteredAt: order.orderedAt,
-                  tableId: order.tableName,
-                  menus: order.items,
+                  enteredAt: order.first.orderedAt,
+                  tableId: order.first.tableName,
+                  orders: order,
                   onTap: () {
-                    showOrderStatusDialog(order: order);
+                    showOrderStatusDialog(orders: orders);
                   },
                 ),
               )

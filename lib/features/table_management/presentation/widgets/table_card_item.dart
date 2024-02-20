@@ -1,5 +1,6 @@
 import 'package:check_order_admin/core/theme/colors.dart';
-import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
+import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,14 +9,14 @@ import '../../../../core/theme/text_style.dart';
 class TableCardItem extends StatelessWidget {
   final DateTime enteredAt;
   final String tableId;
-  final List<OrderItemModel> menus;
+  final List<OrderModel> orders;
   final VoidCallback onTap;
 
   const TableCardItem({
     super.key,
     required this.enteredAt,
     required this.tableId,
-    required this.menus,
+    required this.orders,
     required this.onTap,
   });
 
@@ -91,7 +92,9 @@ class TableCardItem extends StatelessWidget {
   Widget get _menuList {
     return Wrap(
         runSpacing: 7,
-        children: menus
+        children: orders
+            .map((e) => e.items)
+            .flattened
             .map((menu) => _menuItem(
                   name: menu.item.name,
                   count: menu.count,
