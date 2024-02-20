@@ -36,7 +36,9 @@ class OrderItem extends StatelessWidget {
       OrderStatus.completed => order.completedAt,
     };
     final diffDate = DateTime.now().difference(updateDate ?? order.orderedAt);
-    final String date = '${diffDate.inMinutes}분 전';
+    final String date = diffDate.inMinutes < 60
+        ? '${diffDate.inMinutes}분 전'
+        : DateFormat('yyyy. MM. dd HH:mm').format(order.orderedAt);
 
     return Column(
       children: [
