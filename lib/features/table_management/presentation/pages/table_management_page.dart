@@ -30,8 +30,12 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
           insetPadding: const EdgeInsets.only(bottom: 44),
           alignment: Alignment.topRight,
           child: OrderStatusDialog(
-            initialOrderedMenuList:
-                orders.map((e) => e.items).flattened.toList(),
+            initialOrderedMenuList: orders
+                .where((e) => [OrderStatus.accepted, OrderStatus.completed]
+                    .contains(e.status))
+                .map((e) => e.items)
+                .flattened
+                .toList(),
             onConfirm: (totalPrice) async {
               for (var order in orders) {
                 Logger.d(order.id);
@@ -65,9 +69,7 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
 
   Widget get _buildTableCardList {
     return FirestoreBuilder(
-      ref: ordersRef
-          .whereStoreId(isEqualTo: _storeId)
-          .whereStatus(whereIn: [OrderStatus.completed, OrderStatus.accepted]),
+      ref: ordersRef.whereStoreId(isEqualTo: _storeId),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
         final orders = snapshot.data?.docs
                 .map((e) => e.data)
@@ -76,7 +78,11 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
                 .toList() ??
             [];
 
-        if (orders.isEmpty) {
+        if (orders
+            .where((o) =>
+                o.status == OrderStatus.completed ||
+                o.status == OrderStatus.accepted)
+            .isEmpty) {
           return const Center(
             child: Text(
               '테이블이 없습니다.',

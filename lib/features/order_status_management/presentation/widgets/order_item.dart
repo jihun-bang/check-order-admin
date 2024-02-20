@@ -38,7 +38,7 @@ class OrderItem extends StatelessWidget {
     final diffDate = DateTime.now().difference(updateDate ?? order.orderedAt);
     final String date = diffDate.inMinutes < 60
         ? '${diffDate.inMinutes}분 전'
-        : DateFormat('yyyy. MM. dd HH:mm').format(order.orderedAt);
+        : DateFormat('yyyy. MM. dd').format(order.orderedAt);
 
     return Column(
       children: [
@@ -55,7 +55,7 @@ class OrderItem extends StatelessWidget {
           ),
         ),
         Text(
-          DateFormat('H:m').format(order.orderedAt),
+          DateFormat('HH:mm').format(order.orderedAt),
           style: AppTextStyle.title22b136,
         ),
       ],
@@ -94,18 +94,21 @@ class OrderItem extends StatelessWidget {
     final isAccepted = order.status == OrderStatus.accepted;
     return Column(
       children: [
-        AppButton(
-          label: isAccepted ? '주문 완료' : '주문 수락',
-          onTap: () {
-            if (isAccepted) {
-              ordersRef.doc(order.id).update(
-                  status: OrderStatus.completed, completedAt: DateTime.now());
-            } else {
-              ordersRef.doc(order.id).update(
-                  status: OrderStatus.accepted, acceptedAt: DateTime.now());
-            }
-          },
-        ),
+        if (order.status != OrderStatus.declined)
+          AppButton(
+            label: isAccepted ? '주문 완료' : '주문 수락',
+            onTap: () {
+              if (isAccepted) {
+                ordersRef.doc(order.id).update(
+                    status: OrderStatus.completed, completedAt: DateTime.now());
+              } else {
+                ordersRef.doc(order.id).update(
+                    status: OrderStatus.accepted, acceptedAt: DateTime.now());
+              }
+            },
+          )
+        else
+          const SizedBox(width: 248),
         if (order.status != OrderStatus.declined)
           Padding(
             padding: const EdgeInsets.only(top: 16),
@@ -114,7 +117,9 @@ class OrderItem extends StatelessWidget {
               label: '주문 거절',
               onTap: () {
                 ordersRef.doc(order.id).update(
-                    status: OrderStatus.declined, declinedAt: DateTime.now());
+                      status: OrderStatus.declined,
+                      declinedAt: DateTime.now(),
+                    );
               },
             ),
           ),

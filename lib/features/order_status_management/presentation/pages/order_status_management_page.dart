@@ -42,11 +42,15 @@ class OrderStatusManagementPage extends ConsumerWidget {
   }
 
   Widget _buildTabBarView(WidgetRef ref) {
+    final email = ref.read(authProvider.notifier).currentUser?.email;
     return FirestoreBuilder(
-        ref: ordersRef.whereStoreId(
-            isEqualTo: ref.watch(authProvider.notifier).currentUser?.email),
+        ref: ordersRef.whereStoreId(isEqualTo: email),
         builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
-          final orders = snapshot.data?.docs.map((e) => e.data) ?? [];
+          final orders = snapshot.data?.docs
+                  .map((e) => e.data)
+                  .where((e) => !e.isSettlement)
+                  .toList() ??
+              [];
           return TabBarView(children: [
             OrderStatusManagementTabBarView(
               models:

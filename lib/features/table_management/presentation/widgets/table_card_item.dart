@@ -20,6 +20,11 @@ class TableCardItem extends StatelessWidget {
     required this.onTap,
   });
 
+  List<OrderModel> get _orders => orders
+      .where((e) =>
+          [OrderStatus.accepted, OrderStatus.completed].contains(e.status))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -92,7 +97,7 @@ class TableCardItem extends StatelessWidget {
   Widget get _menuList {
     return Wrap(
         runSpacing: 7,
-        children: orders
+        children: _orders
             .map((e) => e.items)
             .flattened
             .map((menu) => _menuItem(
