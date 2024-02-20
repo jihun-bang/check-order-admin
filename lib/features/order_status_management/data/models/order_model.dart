@@ -18,9 +18,11 @@ class OrderModel with _$OrderModel {
     required String orderType,
     required List<OrderItemModel> items,
     required DateTime orderedAt,
+    @Default(false) bool isSettlement,
     DateTime? acceptedAt,
     DateTime? declinedAt,
     DateTime? completedAt,
+    DateTime? settlementAt,
     required int totalAmount,
   }) = _OrderModel;
 

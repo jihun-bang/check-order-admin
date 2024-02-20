@@ -28,9 +28,11 @@ mixin _$OrderModel {
   String get orderType => throw _privateConstructorUsedError;
   List<OrderItemModel> get items => throw _privateConstructorUsedError;
   DateTime get orderedAt => throw _privateConstructorUsedError;
+  bool get isSettlement => throw _privateConstructorUsedError;
   DateTime? get acceptedAt => throw _privateConstructorUsedError;
   DateTime? get declinedAt => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
+  DateTime? get settlementAt => throw _privateConstructorUsedError;
   int get totalAmount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,9 +55,11 @@ abstract class $OrderModelCopyWith<$Res> {
       String orderType,
       List<OrderItemModel> items,
       DateTime orderedAt,
+      bool isSettlement,
       DateTime? acceptedAt,
       DateTime? declinedAt,
       DateTime? completedAt,
+      DateTime? settlementAt,
       int totalAmount});
 }
 
@@ -79,9 +83,11 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
     Object? orderType = null,
     Object? items = null,
     Object? orderedAt = null,
+    Object? isSettlement = null,
     Object? acceptedAt = freezed,
     Object? declinedAt = freezed,
     Object? completedAt = freezed,
+    Object? settlementAt = freezed,
     Object? totalAmount = null,
   }) {
     return _then(_value.copyWith(
@@ -113,6 +119,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
           ? _value.orderedAt
           : orderedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isSettlement: null == isSettlement
+          ? _value.isSettlement
+          : isSettlement // ignore: cast_nullable_to_non_nullable
+              as bool,
       acceptedAt: freezed == acceptedAt
           ? _value.acceptedAt
           : acceptedAt // ignore: cast_nullable_to_non_nullable
@@ -124,6 +134,10 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      settlementAt: freezed == settlementAt
+          ? _value.settlementAt
+          : settlementAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       totalAmount: null == totalAmount
           ? _value.totalAmount
@@ -149,9 +163,11 @@ abstract class _$$OrderModelImplCopyWith<$Res>
       String orderType,
       List<OrderItemModel> items,
       DateTime orderedAt,
+      bool isSettlement,
       DateTime? acceptedAt,
       DateTime? declinedAt,
       DateTime? completedAt,
+      DateTime? settlementAt,
       int totalAmount});
 }
 
@@ -173,9 +189,11 @@ class __$$OrderModelImplCopyWithImpl<$Res>
     Object? orderType = null,
     Object? items = null,
     Object? orderedAt = null,
+    Object? isSettlement = null,
     Object? acceptedAt = freezed,
     Object? declinedAt = freezed,
     Object? completedAt = freezed,
+    Object? settlementAt = freezed,
     Object? totalAmount = null,
   }) {
     return _then(_$OrderModelImpl(
@@ -207,6 +225,10 @@ class __$$OrderModelImplCopyWithImpl<$Res>
           ? _value.orderedAt
           : orderedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isSettlement: null == isSettlement
+          ? _value.isSettlement
+          : isSettlement // ignore: cast_nullable_to_non_nullable
+              as bool,
       acceptedAt: freezed == acceptedAt
           ? _value.acceptedAt
           : acceptedAt // ignore: cast_nullable_to_non_nullable
@@ -218,6 +240,10 @@ class __$$OrderModelImplCopyWithImpl<$Res>
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      settlementAt: freezed == settlementAt
+          ? _value.settlementAt
+          : settlementAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       totalAmount: null == totalAmount
           ? _value.totalAmount
@@ -239,9 +265,11 @@ class _$OrderModelImpl implements _OrderModel {
       required this.orderType,
       required final List<OrderItemModel> items,
       required this.orderedAt,
+      this.isSettlement = false,
       this.acceptedAt,
       this.declinedAt,
       this.completedAt,
+      this.settlementAt,
       required this.totalAmount})
       : _items = items;
 
@@ -272,17 +300,22 @@ class _$OrderModelImpl implements _OrderModel {
   @override
   final DateTime orderedAt;
   @override
+  @JsonKey()
+  final bool isSettlement;
+  @override
   final DateTime? acceptedAt;
   @override
   final DateTime? declinedAt;
   @override
   final DateTime? completedAt;
   @override
+  final DateTime? settlementAt;
+  @override
   final int totalAmount;
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, tableName: $tableName, storeId: $storeId, status: $status, orderType: $orderType, items: $items, orderedAt: $orderedAt, acceptedAt: $acceptedAt, declinedAt: $declinedAt, completedAt: $completedAt, totalAmount: $totalAmount)';
+    return 'OrderModel(id: $id, tableName: $tableName, storeId: $storeId, status: $status, orderType: $orderType, items: $items, orderedAt: $orderedAt, isSettlement: $isSettlement, acceptedAt: $acceptedAt, declinedAt: $declinedAt, completedAt: $completedAt, settlementAt: $settlementAt, totalAmount: $totalAmount)';
   }
 
   @override
@@ -300,12 +333,16 @@ class _$OrderModelImpl implements _OrderModel {
             const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.orderedAt, orderedAt) ||
                 other.orderedAt == orderedAt) &&
+            (identical(other.isSettlement, isSettlement) ||
+                other.isSettlement == isSettlement) &&
             (identical(other.acceptedAt, acceptedAt) ||
                 other.acceptedAt == acceptedAt) &&
             (identical(other.declinedAt, declinedAt) ||
                 other.declinedAt == declinedAt) &&
             (identical(other.completedAt, completedAt) ||
                 other.completedAt == completedAt) &&
+            (identical(other.settlementAt, settlementAt) ||
+                other.settlementAt == settlementAt) &&
             (identical(other.totalAmount, totalAmount) ||
                 other.totalAmount == totalAmount));
   }
@@ -321,9 +358,11 @@ class _$OrderModelImpl implements _OrderModel {
       orderType,
       const DeepCollectionEquality().hash(_items),
       orderedAt,
+      isSettlement,
       acceptedAt,
       declinedAt,
       completedAt,
+      settlementAt,
       totalAmount);
 
   @JsonKey(ignore: true)
@@ -349,9 +388,11 @@ abstract class _OrderModel implements OrderModel {
       required final String orderType,
       required final List<OrderItemModel> items,
       required final DateTime orderedAt,
+      final bool isSettlement,
       final DateTime? acceptedAt,
       final DateTime? declinedAt,
       final DateTime? completedAt,
+      final DateTime? settlementAt,
       required final int totalAmount}) = _$OrderModelImpl;
 
   factory _OrderModel.fromJson(Map<String, dynamic> json) =
@@ -373,11 +414,15 @@ abstract class _OrderModel implements OrderModel {
   @override
   DateTime get orderedAt;
   @override
+  bool get isSettlement;
+  @override
   DateTime? get acceptedAt;
   @override
   DateTime? get declinedAt;
   @override
   DateTime? get completedAt;
+  @override
+  DateTime? get settlementAt;
   @override
   int get totalAmount;
   @override

@@ -10,7 +10,7 @@ part of 'menu_option.dart';
 
 MenuOptionModel _$MenuOptionModelFromJson(Map<String, dynamic> json) =>
     MenuOptionModel(
-      name: json['name'] as String,
+      name: json['name'] as String? ?? '',
       price: json['price'] as int? ?? 0,
     );
 

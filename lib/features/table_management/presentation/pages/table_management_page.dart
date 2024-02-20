@@ -5,6 +5,7 @@ import 'package:check_order_admin/features/table_management/presentation/widgets
 import 'package:check_order_admin/services/auth_provider.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TableManagementPage extends ConsumerStatefulWidget {
@@ -16,19 +17,21 @@ class TableManagementPage extends ConsumerStatefulWidget {
 }
 
 class _TableManagementPageState extends ConsumerState<TableManagementPage> {
-  void showOrderStatusDialog({required order}) {
+  String? get _storeId => ref.read(authProvider.notifier).currentUser?.email;
+
+  void showOrderStatusDialog({required OrderModel order}) {
     showDialog(
       barrierColor: Colors.transparent,
       context: context,
       builder: (_) {
         return Dialog(
-          // bottom: _buildBottomNavigationBar height
           insetPadding: const EdgeInsets.only(bottom: 44),
           alignment: Alignment.topRight,
           child: OrderStatusDialog(
             initialOrderedMenuList: order.items,
             onConfirm: (totalPrice) {
-              print('[API] ${order.tableName} have to pay $totalPrice');
+              ordersRef.doc(order.id).update(isSettlement: true);
+              context.pop();
             },
           ),
         );
@@ -42,26 +45,21 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(30),
-          child: _buildTableCardList(ref, (order) {
-            showOrderStatusDialog(order: order);
-          }),
+          child: _buildTableCardList,
         ),
       ),
     );
   }
 
-  Widget _buildTableCardList(WidgetRef ref, onTap) {
-    final storeId = ref.read(authProvider.notifier).currentUser?.email;
+  Widget get _buildTableCardList {
     return FirestoreBuilder(
       ref: ordersRef
-          .whereStoreId(isEqualTo: storeId)
+          .whereStoreId(isEqualTo: _storeId)
           .whereStatus(isEqualTo: OrderStatus.accepted),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
-        final completedOrders = snapshot.data?.docs.map((e) => e.data).where(
-                (data) =>
-                    data.storeId ==
-                        ref.read(authProvider.notifier).currentUser?.email &&
-                    data.status == OrderStatus.accepted) ??
+        final completedOrders = snapshot.data?.docs
+                .map((e) => e.data)
+                .where((data) => !data.isSettlement) ??
             [];
 
         Map<String, OrderModel> groupedOrders = {};
@@ -96,7 +94,7 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
                   tableId: order.tableName,
                   menus: order.items,
                   onTap: () {
-                    onTap(order);
+                    showOrderStatusDialog(order: order);
                   },
                 ),
               )

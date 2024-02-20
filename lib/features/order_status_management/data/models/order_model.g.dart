@@ -143,12 +143,16 @@ abstract class OrderModelDocumentReference
     FieldValue itemsFieldValue,
     DateTime orderedAt,
     FieldValue orderedAtFieldValue,
+    bool isSettlement,
+    FieldValue isSettlementFieldValue,
     DateTime? acceptedAt,
     FieldValue acceptedAtFieldValue,
     DateTime? declinedAt,
     FieldValue declinedAtFieldValue,
     DateTime? completedAt,
     FieldValue completedAtFieldValue,
+    DateTime? settlementAt,
+    FieldValue settlementAtFieldValue,
     int totalAmount,
     FieldValue totalAmountFieldValue,
   });
@@ -170,12 +174,16 @@ abstract class OrderModelDocumentReference
     FieldValue itemsFieldValue,
     DateTime orderedAt,
     FieldValue orderedAtFieldValue,
+    bool isSettlement,
+    FieldValue isSettlementFieldValue,
     DateTime? acceptedAt,
     FieldValue acceptedAtFieldValue,
     DateTime? declinedAt,
     FieldValue declinedAtFieldValue,
     DateTime? completedAt,
     FieldValue completedAtFieldValue,
+    DateTime? settlementAt,
+    FieldValue settlementAtFieldValue,
     int totalAmount,
     FieldValue totalAmountFieldValue,
   });
@@ -222,12 +230,16 @@ class _$OrderModelDocumentReference
     FieldValue? itemsFieldValue,
     Object? orderedAt = _sentinel,
     FieldValue? orderedAtFieldValue,
+    Object? isSettlement = _sentinel,
+    FieldValue? isSettlementFieldValue,
     Object? acceptedAt = _sentinel,
     FieldValue? acceptedAtFieldValue,
     Object? declinedAt = _sentinel,
     FieldValue? declinedAtFieldValue,
     Object? completedAt = _sentinel,
     FieldValue? completedAtFieldValue,
+    Object? settlementAt = _sentinel,
+    FieldValue? settlementAtFieldValue,
     Object? totalAmount = _sentinel,
     FieldValue? totalAmountFieldValue,
   }) async {
@@ -256,6 +268,10 @@ class _$OrderModelDocumentReference
       "Cannot specify both orderedAt and orderedAtFieldValue",
     );
     assert(
+      isSettlement == _sentinel || isSettlementFieldValue == null,
+      "Cannot specify both isSettlement and isSettlementFieldValue",
+    );
+    assert(
       acceptedAt == _sentinel || acceptedAtFieldValue == null,
       "Cannot specify both acceptedAt and acceptedAtFieldValue",
     );
@@ -266,6 +282,10 @@ class _$OrderModelDocumentReference
     assert(
       completedAt == _sentinel || completedAtFieldValue == null,
       "Cannot specify both completedAt and completedAtFieldValue",
+    );
+    assert(
+      settlementAt == _sentinel || settlementAtFieldValue == null,
+      "Cannot specify both settlementAt and settlementAtFieldValue",
     );
     assert(
       totalAmount == _sentinel || totalAmountFieldValue == null,
@@ -302,6 +322,11 @@ class _$OrderModelDocumentReference
             _$$OrderModelImplPerFieldToJson.orderedAt(orderedAt as DateTime),
       if (orderedAtFieldValue != null)
         _$$OrderModelImplFieldMap['orderedAt']!: orderedAtFieldValue,
+      if (isSettlement != _sentinel)
+        _$$OrderModelImplFieldMap['isSettlement']!:
+            _$$OrderModelImplPerFieldToJson.isSettlement(isSettlement as bool),
+      if (isSettlementFieldValue != null)
+        _$$OrderModelImplFieldMap['isSettlement']!: isSettlementFieldValue,
       if (acceptedAt != _sentinel)
         _$$OrderModelImplFieldMap['acceptedAt']!:
             _$$OrderModelImplPerFieldToJson.acceptedAt(acceptedAt as DateTime?),
@@ -318,6 +343,12 @@ class _$OrderModelDocumentReference
                 .completedAt(completedAt as DateTime?),
       if (completedAtFieldValue != null)
         _$$OrderModelImplFieldMap['completedAt']!: completedAtFieldValue,
+      if (settlementAt != _sentinel)
+        _$$OrderModelImplFieldMap['settlementAt']!:
+            _$$OrderModelImplPerFieldToJson
+                .settlementAt(settlementAt as DateTime?),
+      if (settlementAtFieldValue != null)
+        _$$OrderModelImplFieldMap['settlementAt']!: settlementAtFieldValue,
       if (totalAmount != _sentinel)
         _$$OrderModelImplFieldMap['totalAmount']!:
             _$$OrderModelImplPerFieldToJson.totalAmount(totalAmount as int),
@@ -342,12 +373,16 @@ class _$OrderModelDocumentReference
     FieldValue? itemsFieldValue,
     Object? orderedAt = _sentinel,
     FieldValue? orderedAtFieldValue,
+    Object? isSettlement = _sentinel,
+    FieldValue? isSettlementFieldValue,
     Object? acceptedAt = _sentinel,
     FieldValue? acceptedAtFieldValue,
     Object? declinedAt = _sentinel,
     FieldValue? declinedAtFieldValue,
     Object? completedAt = _sentinel,
     FieldValue? completedAtFieldValue,
+    Object? settlementAt = _sentinel,
+    FieldValue? settlementAtFieldValue,
     Object? totalAmount = _sentinel,
     FieldValue? totalAmountFieldValue,
   }) {
@@ -376,6 +411,10 @@ class _$OrderModelDocumentReference
       "Cannot specify both orderedAt and orderedAtFieldValue",
     );
     assert(
+      isSettlement == _sentinel || isSettlementFieldValue == null,
+      "Cannot specify both isSettlement and isSettlementFieldValue",
+    );
+    assert(
       acceptedAt == _sentinel || acceptedAtFieldValue == null,
       "Cannot specify both acceptedAt and acceptedAtFieldValue",
     );
@@ -386,6 +425,10 @@ class _$OrderModelDocumentReference
     assert(
       completedAt == _sentinel || completedAtFieldValue == null,
       "Cannot specify both completedAt and completedAtFieldValue",
+    );
+    assert(
+      settlementAt == _sentinel || settlementAtFieldValue == null,
+      "Cannot specify both settlementAt and settlementAtFieldValue",
     );
     assert(
       totalAmount == _sentinel || totalAmountFieldValue == null,
@@ -422,6 +465,11 @@ class _$OrderModelDocumentReference
             _$$OrderModelImplPerFieldToJson.orderedAt(orderedAt as DateTime),
       if (orderedAtFieldValue != null)
         _$$OrderModelImplFieldMap['orderedAt']!: orderedAtFieldValue,
+      if (isSettlement != _sentinel)
+        _$$OrderModelImplFieldMap['isSettlement']!:
+            _$$OrderModelImplPerFieldToJson.isSettlement(isSettlement as bool),
+      if (isSettlementFieldValue != null)
+        _$$OrderModelImplFieldMap['isSettlement']!: isSettlementFieldValue,
       if (acceptedAt != _sentinel)
         _$$OrderModelImplFieldMap['acceptedAt']!:
             _$$OrderModelImplPerFieldToJson.acceptedAt(acceptedAt as DateTime?),
@@ -438,6 +486,12 @@ class _$OrderModelDocumentReference
                 .completedAt(completedAt as DateTime?),
       if (completedAtFieldValue != null)
         _$$OrderModelImplFieldMap['completedAt']!: completedAtFieldValue,
+      if (settlementAt != _sentinel)
+        _$$OrderModelImplFieldMap['settlementAt']!:
+            _$$OrderModelImplPerFieldToJson
+                .settlementAt(settlementAt as DateTime?),
+      if (settlementAtFieldValue != null)
+        _$$OrderModelImplFieldMap['settlementAt']!: settlementAtFieldValue,
       if (totalAmount != _sentinel)
         _$$OrderModelImplFieldMap['totalAmount']!:
             _$$OrderModelImplPerFieldToJson.totalAmount(totalAmount as int),
@@ -610,6 +664,17 @@ abstract class OrderModelQuery
     List<DateTime>? whereIn,
     List<DateTime>? whereNotIn,
   });
+  OrderModelQuery whereIsSettlement({
+    bool? isEqualTo,
+    bool? isNotEqualTo,
+    bool? isLessThan,
+    bool? isLessThanOrEqualTo,
+    bool? isGreaterThan,
+    bool? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<bool>? whereIn,
+    List<bool>? whereNotIn,
+  });
   OrderModelQuery whereAcceptedAt({
     DateTime? isEqualTo,
     DateTime? isNotEqualTo,
@@ -633,6 +698,17 @@ abstract class OrderModelQuery
     List<DateTime?>? whereNotIn,
   });
   OrderModelQuery whereCompletedAt({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+  });
+  OrderModelQuery whereSettlementAt({
     DateTime? isEqualTo,
     DateTime? isNotEqualTo,
     DateTime? isLessThan,
@@ -739,6 +815,18 @@ abstract class OrderModelQuery
     OrderModelDocumentSnapshot? startAfterDocument,
   });
 
+  OrderModelQuery orderByIsSettlement({
+    bool descending = false,
+    bool startAt,
+    bool startAfter,
+    bool endAt,
+    bool endBefore,
+    OrderModelDocumentSnapshot? startAtDocument,
+    OrderModelDocumentSnapshot? endAtDocument,
+    OrderModelDocumentSnapshot? endBeforeDocument,
+    OrderModelDocumentSnapshot? startAfterDocument,
+  });
+
   OrderModelQuery orderByAcceptedAt({
     bool descending = false,
     DateTime? startAt,
@@ -764,6 +852,18 @@ abstract class OrderModelQuery
   });
 
   OrderModelQuery orderByCompletedAt({
+    bool descending = false,
+    DateTime? startAt,
+    DateTime? startAfter,
+    DateTime? endAt,
+    DateTime? endBefore,
+    OrderModelDocumentSnapshot? startAtDocument,
+    OrderModelDocumentSnapshot? endAtDocument,
+    OrderModelDocumentSnapshot? endBeforeDocument,
+    OrderModelDocumentSnapshot? startAfterDocument,
+  });
+
+  OrderModelQuery orderBySettlementAt({
     bool descending = false,
     DateTime? startAt,
     DateTime? startAfter,
@@ -1251,6 +1351,52 @@ class _$OrderModelQuery
     );
   }
 
+  OrderModelQuery whereIsSettlement({
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
+    bool? isNull,
+    List<bool>? whereIn,
+    List<bool>? whereNotIn,
+  }) {
+    return _$OrderModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$$OrderModelImplFieldMap['isSettlement']!,
+        isEqualTo: isEqualTo != notSetQueryParam
+            ? _$$OrderModelImplPerFieldToJson.isSettlement(isEqualTo as bool)
+            : notSetQueryParam,
+        isNotEqualTo: isNotEqualTo != notSetQueryParam
+            ? _$$OrderModelImplPerFieldToJson.isSettlement(isNotEqualTo as bool)
+            : notSetQueryParam,
+        isLessThan: isLessThan != null
+            ? _$$OrderModelImplPerFieldToJson.isSettlement(isLessThan as bool)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$$OrderModelImplPerFieldToJson
+                .isSettlement(isLessThanOrEqualTo as bool)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$$OrderModelImplPerFieldToJson
+                .isSettlement(isGreaterThan as bool)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$$OrderModelImplPerFieldToJson
+                .isSettlement(isGreaterThanOrEqualTo as bool)
+            : null,
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$$OrderModelImplPerFieldToJson.isSettlement(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$$OrderModelImplPerFieldToJson.isSettlement(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
   OrderModelQuery whereAcceptedAt({
     Object? isEqualTo = notSetQueryParam,
     Object? isNotEqualTo = notSetQueryParam,
@@ -1391,6 +1537,55 @@ class _$OrderModelQuery
             whereIn?.map((e) => _$$OrderModelImplPerFieldToJson.completedAt(e)),
         whereNotIn: whereNotIn
             ?.map((e) => _$$OrderModelImplPerFieldToJson.completedAt(e)),
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  OrderModelQuery whereSettlementAt({
+    Object? isEqualTo = notSetQueryParam,
+    Object? isNotEqualTo = notSetQueryParam,
+    Object? isLessThan = null,
+    Object? isLessThanOrEqualTo = null,
+    Object? isGreaterThan = null,
+    Object? isGreaterThanOrEqualTo = null,
+    bool? isNull,
+    List<DateTime?>? whereIn,
+    List<DateTime?>? whereNotIn,
+  }) {
+    return _$OrderModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$$OrderModelImplFieldMap['settlementAt']!,
+        isEqualTo: isEqualTo != notSetQueryParam
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isEqualTo as DateTime?)
+            : notSetQueryParam,
+        isNotEqualTo: isNotEqualTo != notSetQueryParam
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isNotEqualTo as DateTime?)
+            : notSetQueryParam,
+        isLessThan: isLessThan != null
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isLessThan as DateTime?)
+            : null,
+        isLessThanOrEqualTo: isLessThanOrEqualTo != null
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isLessThanOrEqualTo as DateTime?)
+            : null,
+        isGreaterThan: isGreaterThan != null
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isGreaterThan as DateTime?)
+            : null,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo != null
+            ? _$$OrderModelImplPerFieldToJson
+                .settlementAt(isGreaterThanOrEqualTo as DateTime?)
+            : null,
+        isNull: isNull,
+        whereIn: whereIn
+            ?.map((e) => _$$OrderModelImplPerFieldToJson.settlementAt(e)),
+        whereNotIn: whereNotIn
+            ?.map((e) => _$$OrderModelImplPerFieldToJson.settlementAt(e)),
       ),
       $queryCursor: $queryCursor,
     );
@@ -1948,6 +2143,79 @@ class _$OrderModelQuery
     );
   }
 
+  OrderModelQuery orderByIsSettlement({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OrderModelDocumentSnapshot? startAtDocument,
+    OrderModelDocumentSnapshot? endAtDocument,
+    OrderModelDocumentSnapshot? endBeforeDocument,
+    OrderModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(
+        _$$OrderModelImplFieldMap['isSettlement']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$OrderModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
   OrderModelQuery orderByAcceptedAt({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2107,6 +2375,79 @@ class _$OrderModelQuery
   }) {
     final query = $referenceWithoutCursor.orderBy(
         _$$OrderModelImplFieldMap['completedAt']!,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$OrderModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  OrderModelQuery orderBySettlementAt({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OrderModelDocumentSnapshot? startAtDocument,
+    OrderModelDocumentSnapshot? endAtDocument,
+    OrderModelDocumentSnapshot? endBeforeDocument,
+    OrderModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(
+        _$$OrderModelImplFieldMap['settlementAt']!,
         descending: descending);
     var queryCursor = $queryCursor;
 
@@ -2350,6 +2691,7 @@ _$OrderModelImpl _$$OrderModelImplFromJson(Map<String, dynamic> json) =>
           .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       orderedAt: DateTime.parse(json['ordered_at'] as String),
+      isSettlement: json['is_settlement'] as bool? ?? false,
       acceptedAt: json['accepted_at'] == null
           ? null
           : DateTime.parse(json['accepted_at'] as String),
@@ -2359,6 +2701,9 @@ _$OrderModelImpl _$$OrderModelImplFromJson(Map<String, dynamic> json) =>
       completedAt: json['completed_at'] == null
           ? null
           : DateTime.parse(json['completed_at'] as String),
+      settlementAt: json['settlement_at'] == null
+          ? null
+          : DateTime.parse(json['settlement_at'] as String),
       totalAmount: json['total_amount'] as int,
     );
 
@@ -2370,9 +2715,11 @@ const _$$OrderModelImplFieldMap = <String, String>{
   'orderType': 'order_type',
   'items': 'items',
   'orderedAt': 'ordered_at',
+  'isSettlement': 'is_settlement',
   'acceptedAt': 'accepted_at',
   'declinedAt': 'declined_at',
   'completedAt': 'completed_at',
+  'settlementAt': 'settlement_at',
   'totalAmount': 'total_amount',
 };
 
@@ -2395,11 +2742,16 @@ abstract class _$$OrderModelImplPerFieldToJson {
   // ignore: unused_element
   static Object? orderedAt(DateTime instance) => instance.toIso8601String();
   // ignore: unused_element
+  static Object? isSettlement(bool instance) => instance;
+  // ignore: unused_element
   static Object? acceptedAt(DateTime? instance) => instance?.toIso8601String();
   // ignore: unused_element
   static Object? declinedAt(DateTime? instance) => instance?.toIso8601String();
   // ignore: unused_element
   static Object? completedAt(DateTime? instance) => instance?.toIso8601String();
+  // ignore: unused_element
+  static Object? settlementAt(DateTime? instance) =>
+      instance?.toIso8601String();
   // ignore: unused_element
   static Object? totalAmount(int instance) => instance;
 }
@@ -2413,9 +2765,11 @@ Map<String, dynamic> _$$OrderModelImplToJson(_$OrderModelImpl instance) =>
       'order_type': instance.orderType,
       'items': instance.items.map((e) => e.toJson()).toList(),
       'ordered_at': instance.orderedAt.toIso8601String(),
+      'is_settlement': instance.isSettlement,
       'accepted_at': instance.acceptedAt?.toIso8601String(),
       'declined_at': instance.declinedAt?.toIso8601String(),
       'completed_at': instance.completedAt?.toIso8601String(),
+      'settlement_at': instance.settlementAt?.toIso8601String(),
       'total_amount': instance.totalAmount,
     };
 
