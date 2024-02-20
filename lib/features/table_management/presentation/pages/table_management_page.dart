@@ -7,31 +7,37 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TableManagementPage extends ConsumerWidget {
+class TableManagementPage extends ConsumerStatefulWidget {
   const TableManagementPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    void showOrderStatusDialog({required order}) {
-      showDialog(
-        barrierColor: Colors.transparent,
-        context: context,
-        builder: (_) {
-          return Dialog(
-            // bottom: _buildBottomNavigationBar height
-            insetPadding: const EdgeInsets.only(bottom: 44),
-            alignment: Alignment.topRight,
-            child: OrderStatusDialog(
-              initialOrderedMenuList: order.items,
-              onConfirm: (totalPrice) {
-                print('[API] ${order.tableName} have to pay $totalPrice');
-              },
-            ),
-          );
-        },
-      );
-    }
+  ConsumerState<TableManagementPage> createState() =>
+      _TableManagementPageState();
+}
 
+class _TableManagementPageState extends ConsumerState<TableManagementPage> {
+  void showOrderStatusDialog({required order}) {
+    showDialog(
+      barrierColor: Colors.transparent,
+      context: context,
+      builder: (_) {
+        return Dialog(
+          // bottom: _buildBottomNavigationBar height
+          insetPadding: const EdgeInsets.only(bottom: 44),
+          alignment: Alignment.topRight,
+          child: OrderStatusDialog(
+            initialOrderedMenuList: order.items,
+            onConfirm: (totalPrice) {
+              print('[API] ${order.tableName} have to pay $totalPrice');
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -45,14 +51,17 @@ class TableManagementPage extends ConsumerWidget {
   }
 
   Widget _buildTableCardList(WidgetRef ref, onTap) {
+    final storeId = ref.read(authProvider.notifier).currentUser?.email;
     return FirestoreBuilder(
-      ref: ordersRef,
+      ref: ordersRef
+          .whereStoreId(isEqualTo: storeId)
+          .whereStatus(isEqualTo: OrderStatus.accepted),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
         final completedOrders = snapshot.data?.docs.map((e) => e.data).where(
                 (data) =>
                     data.storeId ==
                         ref.read(authProvider.notifier).currentUser?.email &&
-                    data.status == OrderStatus.completed) ??
+                    data.status == OrderStatus.accepted) ??
             [];
 
         Map<String, OrderModel> groupedOrders = {};

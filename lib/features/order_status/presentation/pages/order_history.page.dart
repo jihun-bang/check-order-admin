@@ -33,14 +33,14 @@ List<OrderModel> filterOrders({
   return filteredOrders;
 }
 
-class OrderStatusPage extends ConsumerStatefulWidget {
-  const OrderStatusPage({super.key});
+class OrderHistoryPage extends ConsumerStatefulWidget {
+  const OrderHistoryPage({super.key});
 
   @override
   _OrderStatusPageState createState() => _OrderStatusPageState();
 }
 
-class _OrderStatusPageState extends ConsumerState<OrderStatusPage> {
+class _OrderStatusPageState extends ConsumerState<OrderHistoryPage> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   String tableName = '';
@@ -76,14 +76,11 @@ class _OrderStatusPageState extends ConsumerState<OrderStatusPage> {
   }
 
   Widget _buildOrderStatusTable(WidgetRef ref) {
+    final storeId = ref.read(authProvider.notifier).currentUser?.email;
     return FirestoreBuilder(
-      ref: ordersRef,
+      ref: ordersRef.whereStoreId(isEqualTo: storeId),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
-        final orders = (snapshot.data?.docs.map((e) => e.data).where((data) =>
-                    data.storeId ==
-                    ref.read(authProvider.notifier).currentUser?.email) ??
-                [])
-            .toList();
+        final orders = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
 
         final filteredOrders = filterOrders(
             orders: orders,
