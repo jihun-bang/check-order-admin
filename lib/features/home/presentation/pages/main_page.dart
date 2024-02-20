@@ -34,15 +34,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget get _buildBottomNavigationBar {
-    return Ink(
-      color: Colors.white,
-      child: SafeArea(
-        child: Container(
-          alignment: Alignment.topCenter,
-          height: 80,
-          child: DefaultTabController(length: 5, child: _tabBar),
-        ),
-      ),
+    return SafeArea(
+      child: DefaultTabController(length: 5, child: _tabBar),
     );
   }
 
