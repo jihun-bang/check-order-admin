@@ -81,10 +81,12 @@ class _OrderStatusPageState extends ConsumerState<OrderHistoryPage> {
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
         final orders = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
         final filteredOrders = _filterOrders(
-            orders: orders,
-            startDate: startDate,
-            endDate: endDate,
-            tableName: tableName);
+                orders: orders,
+                startDate: startDate,
+                endDate: endDate,
+                tableName: tableName)
+            .reversed
+            .toList();
         return OrderHistoryTable(orders: filteredOrders);
       },
     );
