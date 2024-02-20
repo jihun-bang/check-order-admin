@@ -43,6 +43,7 @@ List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
         'acceptedAt': dateFormatter(order.acceptedAt),
         'declinedAt': dateFormatter(order.declinedAt),
         'completedAt': dateFormatter(order.completedAt),
+        'settlementAt': dateFormatter(order.settlementAt),
       });
     }
   }
@@ -53,7 +54,7 @@ List<Map<String, dynamic>> flattenMenus(List<OrderModel> orders) {
 List<String> columns = [
   'tableId',
   'orderedAt',
-  'completedAt',
+  'settlementAt',
   'name',
   'count',
   'totalPrice',
@@ -70,10 +71,10 @@ List<String> columnLabels = [
   '상태',
 ];
 
-class OrderStatusTable extends StatelessWidget {
+class OrderHistoryTable extends StatelessWidget {
   final List<OrderModel> orders;
 
-  const OrderStatusTable({super.key, required this.orders});
+  const OrderHistoryTable({super.key, required this.orders});
 
   @override
   Widget build(BuildContext context) {

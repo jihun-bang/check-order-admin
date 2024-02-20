@@ -1,3 +1,4 @@
+import 'package:check_order_admin/core/theme/text_style.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_item.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/features/table_management/presentation/widgets/order_status_dialog.dart';
@@ -30,7 +31,9 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
           child: OrderStatusDialog(
             initialOrderedMenuList: order.items,
             onConfirm: (totalPrice) {
-              ordersRef.doc(order.id).update(isSettlement: true);
+              ordersRef
+                  .doc(order.id)
+                  .update(isSettlement: true, settlementAt: DateTime.now());
               context.pop();
             },
           ),
@@ -61,6 +64,15 @@ class _TableManagementPageState extends ConsumerState<TableManagementPage> {
                 .map((e) => e.data)
                 .where((data) => !data.isSettlement) ??
             [];
+
+        if (completedOrders.isEmpty) {
+          return const Center(
+            child: Text(
+              '테이블이 없습니다.',
+              style: AppTextStyle.title22b136,
+            ),
+          );
+        }
 
         Map<String, OrderModel> groupedOrders = {};
 

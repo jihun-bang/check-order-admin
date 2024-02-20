@@ -1,37 +1,10 @@
-import 'package:check_order_admin/features/order_status/presentation/widgets/date_range_search_input.dart';
-import 'package:check_order_admin/features/order_status/presentation/widgets/order_status_table.dart';
+import 'package:check_order_admin/features/order_history/presentation/widgets/date_range_search_input.dart';
+import 'package:check_order_admin/features/order_history/presentation/widgets/order_history_table.dart';
 import 'package:check_order_admin/features/order_status_management/data/models/order_model.dart';
 import 'package:check_order_admin/services/auth_provider.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-DateTime removeTime(DateTime date) {
-  return DateTime(date.year, date.month, date.day);
-}
-
-List<OrderModel> filterOrders({
-  required List<OrderModel> orders,
-  required DateTime startDate,
-  required DateTime endDate,
-  String tableName = '',
-}) {
-  List<OrderModel> filteredOrders = orders.where((order) {
-    final modifiedOrderedAtDate = removeTime(order.orderedAt);
-    final modifiedStartDate = removeTime(startDate);
-    final modifiedEndDate = removeTime(endDate);
-    final containsTableName = order.tableName.contains(tableName);
-
-    final isDateInRange = (modifiedOrderedAtDate.isAfter(modifiedStartDate) ||
-            modifiedOrderedAtDate.isAtSameMomentAs(modifiedStartDate)) &&
-        (modifiedOrderedAtDate.isBefore(modifiedEndDate) ||
-            modifiedOrderedAtDate.isAtSameMomentAs(modifiedEndDate));
-
-    return isDateInRange && containsTableName;
-  }).toList();
-
-  return filteredOrders;
-}
 
 class OrderHistoryPage extends ConsumerStatefulWidget {
   const OrderHistoryPage({super.key});
@@ -44,6 +17,32 @@ class _OrderStatusPageState extends ConsumerState<OrderHistoryPage> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   String tableName = '';
+
+  DateTime _removeTime(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  List<OrderModel> _filterOrders({
+    required List<OrderModel> orders,
+    required DateTime startDate,
+    required DateTime endDate,
+    String tableName = '',
+  }) {
+    List<OrderModel> filteredOrders = orders.where((order) {
+      final modifiedSettlementAtDate = _removeTime(order.orderedAt);
+      final modifiedStartDate = _removeTime(startDate);
+      final modifiedEndDate = _removeTime(endDate);
+      final containsTableName = order.tableName.contains(tableName);
+      final isDateInRange = (modifiedSettlementAtDate
+                  .isAfter(modifiedStartDate) ||
+              modifiedSettlementAtDate.isAtSameMomentAs(modifiedStartDate)) &&
+          (modifiedSettlementAtDate.isBefore(modifiedEndDate) ||
+              modifiedSettlementAtDate.isAtSameMomentAs(modifiedEndDate));
+      return containsTableName && isDateInRange;
+    }).toList();
+
+    return filteredOrders;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +80,12 @@ class _OrderStatusPageState extends ConsumerState<OrderHistoryPage> {
       ref: ordersRef.whereStoreId(isEqualTo: storeId),
       builder: (_, AsyncSnapshot<OrderModelQuerySnapshot> snapshot, __) {
         final orders = snapshot.data?.docs.map((e) => e.data).toList() ?? [];
-
-        final filteredOrders = filterOrders(
+        final filteredOrders = _filterOrders(
             orders: orders,
             startDate: startDate,
             endDate: endDate,
             tableName: tableName);
-
-        return OrderStatusTable(orders: filteredOrders);
+        return OrderHistoryTable(orders: filteredOrders);
       },
     );
   }
