@@ -1,5 +1,5 @@
-# Check Order Admin
-체크 매장 관리자
+# Tablet Order Admin
+매장 관리자 용 앱
 
 ## Auto Generation
 ```
